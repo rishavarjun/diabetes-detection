@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # cm = confusion_matrix(y_test, result, labels_numbers)
     
     # outputs directory is automatically created so dump models here
-    modelfile = 'outputs/diabetes_model.pkl'
+    modelfile = 'outputs/model.pkl'
     joblib.dump(model, modelfile)
     
     run.log('Intercept:', model.intercept_)
