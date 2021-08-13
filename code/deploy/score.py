@@ -33,7 +33,7 @@ def init():
 # the example input you provide here. This will also generate a Swagger
 # API document for your web service.
 @input_schema('data', NumpyParameterType(np.array([[0.1, 1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8]])))
-@output_schema('prediction', StandardPythonParameterType({'predict': [['Positive']]}))
+@output_schema(StandardPythonParameterType({'predict': [['Positive']]}))
 def run(data):
     # Use the model object loaded by init().
     result = model.predict(data)
