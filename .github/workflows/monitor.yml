@@ -52,7 +52,7 @@ jobs:
 
     # Register model in Azure Machine Learning model registry
     - name: Register model
-      if: steps.aml_run.outputs.run_metrics["Model_result"] > steps.monitor_model.outputs.test_accuracy
+      if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
       id: aml_registermodel
       uses: Azure/aml-registermodel@v1
       with:
@@ -62,7 +62,7 @@ jobs:
 
     # Deploy model in Azure Machine Learning to ACI
     - name: Deploy model
-      if: steps.aml_run.outputs.run_metrics["Model_result"] > steps.monitor_model.outputs.test_accuracy
+      if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
       id: aml_deploy
       uses: Azure/aml-deploy@v1
       with:
