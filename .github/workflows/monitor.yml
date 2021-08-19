@@ -4,7 +4,7 @@ name: aml-model-monitor
 on:
   push:
     branches:
-      - remote-monitor
+      - monitor-via-aml
     # paths:
     #   - 'code/*'
 
