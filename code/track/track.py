@@ -9,48 +9,51 @@ from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.authentication import ServicePrincipalAuthentication
 from azureml.core.model import Model
 from azureml.core.webservice import Webservice
+from azureml.core.run import Run
 
+run = Run.get_context()
+ws = run.experiment.workspace
 
 if __name__ == "__main__":
     # Loading azure credentials
-    print("::debug::Loading azure credentials")
-    azure_credentials = os.environ.get("INPUT_AZURE_CREDENTIALS", default="{}")
+    # print("::debug::Loading azure credentials")
+    # azure_credentials = os.environ.get("INPUT_AZURE_CREDENTIALS", default="{}")
 
-    # Loading parameters file
-    print("::debug::Loading parameters file")
-    parameters_file = os.environ.get("INPUT_PARAMETERS_FILE", default="workspace.json")
-    parameters_file_path = os.path.join(".cloud", ".azure", parameters_file)
-    try:
-        with open(parameters_file_path) as f:
-            parameters = json.load(f)
-    except FileNotFoundError:
-        print(f"::debug::Could not find parameter file in {parameters_file_path}. Please provide a parameter file in your repository if you do not want to use default settings (e.g. .cloud/.azure/workspace.json).")
-        parameters = {}
+    # # Loading parameters file
+    # print("::debug::Loading parameters file")
+    # parameters_file = os.environ.get("INPUT_PARAMETERS_FILE", default="workspace.json")
+    # parameters_file_path = os.path.join(".cloud", ".azure", parameters_file)
+    # try:
+    #     with open(parameters_file_path) as f:
+    #         parameters = json.load(f)
+    # except FileNotFoundError:
+    #     print(f"::debug::Could not find parameter file in {parameters_file_path}. Please provide a parameter file in your repository if you do not want to use default settings (e.g. .cloud/.azure/workspace.json).")
+    #     parameters = {}
 
-    if azure_credentials.get("resourceManagerEndpointUrl", "").startswith("https://management.usgovcloudapi.net"):
-        cloud = "AzureUSGovernment"
-    elif azure_credentials.get("resourceManagerEndpointUrl", "").startswith("https://management.chinacloudapi.cn"):
-        cloud = "AzureChinaCloud"
-    else:
-        cloud = "AzureCloud"
+    # if azure_credentials.get("resourceManagerEndpointUrl", "").startswith("https://management.usgovcloudapi.net"):
+    #     cloud = "AzureUSGovernment"
+    # elif azure_credentials.get("resourceManagerEndpointUrl", "").startswith("https://management.chinacloudapi.cn"):
+    #     cloud = "AzureChinaCloud"
+    # else:
+    #     cloud = "AzureCloud"
     
-    sp_auth = ServicePrincipalAuthentication(
-        tenant_id=azure_credentials.get("tenantId", ""),
-        service_principal_id=azure_credentials.get("clientId", ""),
-        service_principal_password=azure_credentials.get("clientSecret", ""),
-        cloud=cloud
-    )
+    # sp_auth = ServicePrincipalAuthentication(
+    #     tenant_id=azure_credentials.get("tenantId", ""),
+    #     service_principal_id=azure_credentials.get("clientId", ""),
+    #     service_principal_password=azure_credentials.get("clientSecret", ""),
+    #     cloud=cloud
+    # )
 
-    print("::debug::Loading existing Workspace")
-    # Default workspace and resource group name
-    repository_name = str(os.environ.get("GITHUB_REPOSITORY")).split("/")[-1]
+    # print("::debug::Loading existing Workspace")
+    # # Default workspace and resource group name
+    # repository_name = str(os.environ.get("GITHUB_REPOSITORY")).split("/")[-1]
 
-    ws = Workspace.get(
-        name=parameters.get("name", repository_name),
-        subscription_id=azure_credentials.get("subscriptionId", ""),
-        resource_group=parameters.get("resource_group", repository_name),
-        auth=sp_auth
-    )
+    # ws = Workspace.get(
+    #     name=parameters.get("name", repository_name),
+    #     subscription_id=azure_credentials.get("subscriptionId", ""),
+    #     resource_group=parameters.get("resource_group", repository_name),
+    #     auth=sp_auth
+    # )
 
     # Loading registered model
     production_model = ""
@@ -99,6 +102,8 @@ if __name__ == "__main__":
             correct += 1
 
     accuracy = correct/len(ground_truth)
+
+    run.log("Fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
     print(f"::set-output name=test_accuracy::{accuracy}")
 
