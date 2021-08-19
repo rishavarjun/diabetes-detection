@@ -55,7 +55,7 @@ if __name__ == "__main__":
     model = LogisticRegression(max_iter=100000)
     model.fit(x_train, y_train)
     result = model.score(x_test, y_test)
-    run.log("Model result:", result)
+    run.log("Model_result", result)
 
     # labels = ['Negative', 'Positive']
     # labels_numbers = [0, 1]
