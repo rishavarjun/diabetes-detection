@@ -1,73 +1,73 @@
-# Actions train a model on Azure Machine Learning
-name: aml-model-monitor
+# # Actions train a model on Azure Machine Learning
+# name: aml-model-monitor
 
-on:
-  push:
-    branches:
-      - master
-    # paths:
-    #   - 'code/*'
+# on:
+#   push:
+#     branches:
+#       - master
+#     # paths:
+#     #   - 'code/*'
 
-jobs:
-  job1:    # job name
-    runs-on: ubuntu-latest
-    steps:
-    # Checking out repository
-    - name: Check Out Repository
-      id: checkout_repository
-      uses: actions/checkout@v2
+# jobs:
+#   job1:    # job name
+#     runs-on: ubuntu-latest
+#     steps:
+#     # Checking out repository
+#     - name: Check Out Repository
+#       id: checkout_repository
+#       uses: actions/checkout@v2
 
-    - name: Set up Python 3.x                               
-      uses: actions/setup-python@v2                               
-      with:                                 
-        python-version: '3.x'
+#     - name: Set up Python 3.x                               
+#       uses: actions/setup-python@v2                               
+#       with:                                 
+#         python-version: '3.x'
     
-    - name: Install python packages
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r code/track/requirement.txt
+#     - name: Install python packages
+#       run: |
+#         python -m pip install --upgrade pip
+#         pip install -r code/track/requirement.txt
     
-    # Monitoring Model
-    - name: Monitor current Model by executing python script
-      id: monitor_model
-      env:
-        azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-      run: python code/track/track.py
+#     # Monitoring Model
+#     - name: Monitor current Model by executing python script
+#       id: monitor_model
+#       env:
+#         azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#       run: python code/track/track.py
     
-    # Connecting to Azure Compute instance
-    - name: Connect/Create Azure Machine Learning Compute Target
-      if: steps.monitor_model.outputs.test_accuracy < 0.8
-      id: aml_compute_training
-      uses: Azure/aml-compute@v1
-      with:
-          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#     # Connecting to Azure Compute instance
+#     - name: Connect/Create Azure Machine Learning Compute Target
+#       if: steps.monitor_model.outputs.test_accuracy < 0.8
+#       id: aml_compute_training
+#       uses: Azure/aml-compute@v1
+#       with:
+#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
     
-    # Submit a training run to the Azure Machine Learning
-    - name: Submit training run
-      if: steps.monitor_model.outputs.test_accuracy < 0.8
-      id: aml_run
-      uses: Azure/aml-run@v1
-      with:
-          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#     # Submit a training run to the Azure Machine Learning
+#     - name: Submit training run
+#       if: steps.monitor_model.outputs.test_accuracy < 0.8
+#       id: aml_run
+#       uses: Azure/aml-run@v1
+#       with:
+#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Register model in Azure Machine Learning model registry
-    - name: Register model
-      if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
-      id: aml_registermodel
-      uses: Azure/aml-registermodel@v1
-      with:
-          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          run_id:  ${{ steps.aml_run.outputs.run_id }}
-          experiment_name: ${{ steps.aml_run.outputs.experiment_name }}
+#     # Register model in Azure Machine Learning model registry
+#     - name: Register model
+#       if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
+#       id: aml_registermodel
+#       uses: Azure/aml-registermodel@v1
+#       with:
+#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#           run_id:  ${{ steps.aml_run.outputs.run_id }}
+#           experiment_name: ${{ steps.aml_run.outputs.experiment_name }}
 
-    # Deploy model in Azure Machine Learning to ACI
-    - name: Deploy model
-      if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
-      id: aml_deploy
-      uses: Azure/aml-deploy@v1
-      with:
-          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
-          model_version: ${{ steps.aml_registermodel.outputs.model_version }}
-          # optional
-          parameters_file: "deploy.json"
+#     # Deploy model in Azure Machine Learning to ACI
+#     - name: Deploy model
+#       if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
+#       id: aml_deploy
+#       uses: Azure/aml-deploy@v1
+#       with:
+#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#           model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
+#           model_version: ${{ steps.aml_registermodel.outputs.model_version }}
+#           # optional
+#           parameters_file: "deploy.json"
