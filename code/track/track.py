@@ -103,6 +103,8 @@ if __name__ == "__main__":
 
     accuracy = correct/len(ground_truth)
 
+    print("Fresh_data_accuracy", accuracy)
+
     run.log("Fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
     print(f"::set-output name=test_accuracy::{accuracy}")
@@ -118,6 +120,6 @@ if __name__ == "__main__":
         diabetes_dataset = Dataset.from_pandas_dataframe(result_df, path=None, in_memory=False)
         datastore = ws.get_default_datastore()
         # Saving file locally and then uploading to datastore and creating modified dataset from it
-        # May have to use AWS s3 storage here
+        # May have to use AWS S3 storage here
         ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
         # now trigger training actions
