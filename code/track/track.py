@@ -87,6 +87,8 @@ if __name__ == "__main__":
     predicted_output = current_model.predict(new_df)
     predicted_output = [int(i) for i in predicted_output]
 
+    print(os.getcwd())
+
     ground_truth_path = os.path.join("ground", "result.txt")
     file1 = open(ground_truth_path, 'r')         # modify path accordingly
     Lines = file1.readlines()
