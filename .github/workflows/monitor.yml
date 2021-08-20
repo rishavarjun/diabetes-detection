@@ -87,4 +87,4 @@ jobs:
           model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
           model_version: ${{ steps.aml_registermodel.outputs.model_version }}
           # optional
-          parameters_file: "deploy.json"
+          parameters_file: "monitor-deploy.json"
