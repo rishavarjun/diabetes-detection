@@ -70,33 +70,45 @@ if __name__ == "__main__":
     current_model = joblib.load(model_path)
     
     # loading endpoint
-    aci_service= Webservice(ws, "diabetes-detection-master")
-    logs = aci_service.get_logs()
+    # aci_service= Webservice(ws, "diabetes-detection-master")
+    # logs = aci_service.get_logs()
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
-    logs = logs[logs.find(todays_date):]
+    todays_date = todays_date.replace("/", "-")
+    # logs = logs[logs.find(todays_date):]
 
-    endpoint_inputs = re.findall("{'data': (.*?)}", logs)
-    input_data_list = []
-    for x in endpoint_inputs:
-        temp = []
-        for str_input in x[2:-2].split(", "):
-            temp.append(float(str_input))
-        input_data_list.append(temp)
+    # endpoint_inputs = re.findall("{'data': (.*?)}", logs)
+    # input_data_list = []
+    # for x in endpoint_inputs:
+    #     temp = []
+    #     for str_input in x[2:-2].split(", "):
+    #         temp.append(float(str_input))
+    #     input_data_list.append(temp)
         
-    new_df = pd.DataFrame(input_data_list, columns=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'])
-    predicted_output = current_model.predict(new_df)
+    # new_df = pd.DataFrame(input_data_list, columns=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'])
+
+    dataset_name = "diabetes-freshdata-" + todays_date
+    diabetes_ds = Dataset.get_by_name(ws, dataset_name)
+    new_df = diabetes_ds.to_pandas_dataframe()
+
+    array = new_df.values
+
+    x = array[:, 0:8]
+    ground_truth = array[:, 8]
+    ground_truth = [int(i) for i in ground_truth]
+
+    predicted_output = current_model.predict(x)
     predicted_output = [int(i) for i in predicted_output]
 
-    print(os.getcwd())
+    # print(os.getcwd())
 
-    ground_truth_path = os.path.join("ground", "result.txt")
-    file1 = open(ground_truth_path, 'r')         # modify path accordingly
-    Lines = file1.readlines()
-    ground_truth = []
+    # ground_truth_path = os.path.join("ground", "result.txt")
+    # file1 = open(ground_truth_path, 'r')         # modify path accordingly
+    # Lines = file1.readlines()
+    # ground_truth = []
 
-    for line in Lines:
-        ground_truth.append(int(line.strip()))
-    new_df['Outcome'] = ground_truth
+    # for line in Lines:
+    #     ground_truth.append(int(line.strip()))
+    # new_df['Outcome'] = ground_truth
         
     correct = 0
     for i, label in enumerate(ground_truth):
