@@ -121,7 +121,7 @@ if __name__ == "__main__":
 
     run.log("Fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
-    print(f"::set-output name=test_accuracy::{accuracy}")
+    print(f"::set-output name=freshdata_accuracy::{accuracy}")
 
     if accuracy < 0.8:
         # updating dataset with ground truth value
