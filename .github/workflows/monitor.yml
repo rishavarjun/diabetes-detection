@@ -67,7 +67,7 @@ jobs:
     
     - name: Debugging
       run: |
-        echo ${{steps.aml_new_model_run.outputs.accuracy}} ${{steps.aml_monitor_run.outputs.freshdata_accuracy}}
+        echo ${steps.aml_monitor_run.outputs.run_metrics[Fresh_data_accuracy]}
         echo ${{steps.aml_monitor_run.outputs.run_metrics.Fresh_data_accuracy}}
         echo ${{steps.aml_new_model_run.outputs.run_metrics}}
 
