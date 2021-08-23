@@ -59,7 +59,7 @@ jobs:
 
     # Submit a training run to the Azure Machine Learning
     - name: Submit model re-training run
-      if: steps.aml_monitor_run.outputs.freshdata_accuracy < 0.8
+      if: ${{steps.aml_monitor_run.outputs.freshdata_accuracy < 0.8}}
       id: aml_new_model_run
       uses: Azure/aml-run@v1
       with:
@@ -70,7 +70,7 @@ jobs:
 
     # Register model in Azure Machine Learning model registry
     - name: Register model
-      if: steps.aml_new_model_run.outputs.accuracy > steps.aml_monitor_run.outputs.freshdata_accuracy
+      if: ${{steps.aml_new_model_run.outputs.accuracy > steps.aml_monitor_run.outputs.freshdata_accuracy}}
       id: aml_registermodel
       uses: Azure/aml-registermodel@v1
       with:
@@ -82,7 +82,7 @@ jobs:
 
     # Deploy model in Azure Machine Learning to ACI
     - name: Deploy model
-      if: steps.aml_new_model_run.outputs.accuracy > steps.aml_monitor_run.outputs.freshdata_accuracy
+      if: ${{steps.aml_new_model_run.outputs.accuracy > steps.aml_monitor_run.outputs.freshdata_accuracy}}
       id: aml_deploy
       uses: Azure/aml-deploy@v1
       with:
