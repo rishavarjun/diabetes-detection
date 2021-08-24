@@ -11,7 +11,8 @@ from azureml.core.model import Model
 from azureml.core.webservice import Webservice
 from azureml.core.run import Run
 
-run = Run.get_context()
+#run = Run.get_context()
+run = experiment.start_logging()
 ws = run.experiment.workspace
 
 if __name__ == "__main__":
