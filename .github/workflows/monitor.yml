@@ -60,7 +60,7 @@ jobs:
     - name: Debugging
       run: |
          
-          declare -A run_id = steps.aml_monitor_run.outputs.run_id
+          declare -A run_id = ${{steps.aml_monitor_run.outputs.run_id}}
           echo ${{run_id}}
           echo "---------"
           echo ${{steps.aml_monitor_run.outputs.run_metrics[${run_id}]}}
