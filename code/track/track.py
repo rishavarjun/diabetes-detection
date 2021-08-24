@@ -122,6 +122,7 @@ if __name__ == "__main__":
     print("::debug::Creating outputs")
 
     run.log("pradeep_fresh_data_accuracy", 12)
+    print(f"::set-output name=pradeep_fresh_data_accuracy_2::23")
     #run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
     
     #print(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
