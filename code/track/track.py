@@ -11,8 +11,8 @@ from azureml.core.model import Model
 from azureml.core.webservice import Webservice
 from azureml.core.run import Run
 
-#run = Run.get_context()
-run = Experiment.start_logging()
+run = Run.get_context()
+#run = Experiment.start_logging()
 ws = run.experiment.workspace
 
 if __name__ == "__main__":
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     print("pradeep_fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
 
-    run.log("pradeep_fresh_data_accuracy", accuracy)
+    run.log("pradeep_fresh_data_accuracy", 12)
     #run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
     
     #print(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
