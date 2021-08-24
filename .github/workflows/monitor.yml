@@ -9,7 +9,7 @@ on:
     #   - 'code/*'
 
 jobs:
-  job1:    # job name
+  job1: 
     runs-on: ubuntu-latest
     steps:
     # Checking out repository
@@ -60,7 +60,8 @@ jobs:
     - name: Debugging
       run: |
          
-          
+          echo ${{steps.aml_monitor_run.outputs.run_id}}
+          echo "---------"
           echo $[steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy]
           echo "---------"
           echo $(steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy)
