@@ -59,14 +59,15 @@ jobs:
     
     - name: Debugging
       run: |
-          import os
-          print(os.environ['PATH'])
-          print("__")
-          print(steps.aml_monitor_run.outputs.run_metrics)
-          print("__")
-          print(steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy)
-
-      shell: python
+          echo $(pradeep_fresh_data_accuracy)
+          echo ""---------""
+          echo $(steps.aml_monitor_run.outputs.run_id.pradeep_fresh_data_accuracy)
+          echo ""---------""
+          echo $(steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy)
+          echo "______________________"
+          
+          echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+          echo ""---------""
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
 
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
