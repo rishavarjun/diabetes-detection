@@ -58,7 +58,6 @@ jobs:
           parameters_file: "monitor-run.json"
     
     - name: Debugging
-      id: aml_debugging_run
       run: |
           echo ${{steps.aml_monitor_run.outputs.run_metrics.run_id.pradeep_fresh_data_accuracy}}
           echo "_____"
