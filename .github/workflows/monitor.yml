@@ -63,17 +63,9 @@ jobs:
           echo "---------"
           echo $(accuracy)
           echo "---------"
-          echo $(aml_monitor_run.accuracy)
-          echo "---------"
-          echo $[aml_monitor_run.accuracy]
-          echo "---------"
           echo $[accuracy]
           echo "---------"
-          echo ${{aml_monitor_run.pradeep_fresh_data_accuracy}}
-          echo "---------"
           echo $(Debugging.pradeep_fresh_data_accuracy)
-          echo "---------"
-          echo $[aml_monitor_run.pradeep_fresh_data_accuracy]
           echo "---------"
           echo $[pradeep_fresh_data_accuracy]
           echo "---------"
