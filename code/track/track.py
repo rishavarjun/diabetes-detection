@@ -118,11 +118,14 @@ if __name__ == "__main__":
 
     accuracy = correct/len(ground_truth)
 
-    print("pradeep_fresh_data_accuracy", accuracy)
+    #print("pradeep_fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
 
     run.log("pradeep_fresh_data_accuracy", 12)
-    print(f"::set-output name=pradeep_fresh_data_accuracy_2::23")
+    #run_metrics_markdown = convert_to_markdown(run_metrics)
+    #print(f"::set-output name=run_metrics_markdown::{run_metrics_markdown}")
+
+    #print(f"::set-output name=pradeep_fresh_data_accuracy_2::23")
     #run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
     
     #print(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")

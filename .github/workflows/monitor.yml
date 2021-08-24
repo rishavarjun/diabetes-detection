@@ -60,8 +60,9 @@ jobs:
     - name: Debugging
       run: |
           echo ${{steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy}}
-          echo ${{steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy_2}}
+          echo "_____"
           echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+          echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics()}}
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics.Fresh_data_accuracy}}
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics}}
