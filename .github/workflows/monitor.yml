@@ -60,11 +60,19 @@ jobs:
     - name: Debugging
       run: |
          
-          echo ${{steps.aml_monitor_run.outputs.run_metrics[steps.aml_monitor_run.outputs.run_id]}}
+          declare -A run_id = steps.aml_monitor_run.outputs.run_id
+          echo ${{run_id}}
           echo "---------"
-          echo $(steps.aml_monitor_run.accuracy)
+          echo ${{steps.aml_monitor_run.outputs.run_metrics[${run_id}]}}
           echo "---------"
-          echo $(steps.aml_monitor_run.pradeep_fresh_data_accuracy)
+          echo ${{steps.aml_monitor_run.outputs.run_metrics[${{run_id}}]}}
+          echo "---------"
+          echo ${{steps.aml_monitor_run.outputs.run_metrics[@run_id]}}
+          echo "---------"
+          
+          echo $[steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy]
+          echo "---------"
+          echo $(steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy)
           echo "---------"
           
 
