@@ -117,11 +117,14 @@ if __name__ == "__main__":
 
     accuracy = correct/len(ground_truth)
 
-    print("Fresh_data_accuracy", accuracy)
-
-    run.log("Fresh_data_accuracy", accuracy)
+    print("pradeep Fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
-    print(f"::set-output name=freshdata_accuracy::{accuracy}")
+    
+    run.log("pradeep_fresh_data_accuracy", accuracy)
+    run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
+    
+    
+    #print(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
 
     # if accuracy < 0.8:
     #     # updating dataset with ground truth value
