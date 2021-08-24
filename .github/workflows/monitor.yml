@@ -59,8 +59,7 @@ jobs:
     
     - name: Debugging
       run: |
-          echo ${{steps.aml_monitor_run.outputs.run_metrics[${{steps.aml_monitor_run.outputs.run_id}}]}}
-          echo "---------"
+         
           echo ${{steps.aml_monitor_run.outputs.run_metrics[${steps.aml_monitor_run.outputs.run_id}]}}
           echo "---------"
           echo $(steps.aml_monitor_run.accuracy)
