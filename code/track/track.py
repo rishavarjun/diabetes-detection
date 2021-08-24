@@ -124,7 +124,6 @@ if __name__ == "__main__":
     run.log("pradeep_fresh_data_accuracy", accuracy)
     #run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
     
-    
     #print(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
 
     # if accuracy < 0.8:
