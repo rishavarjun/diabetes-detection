@@ -68,8 +68,9 @@ jobs:
 
           echo ${{steps.aml_monitor_run.outputs.run_metrics}}
           echo "_____"
-    #      echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
           echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
+        
+    #      echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics()}}
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics.Fresh_data_accuracy}}
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics}}
