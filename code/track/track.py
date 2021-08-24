@@ -117,11 +117,11 @@ if __name__ == "__main__":
 
     accuracy = correct/len(ground_truth)
 
-    print("pradeep Fresh_data_accuracy", accuracy)
+    print("pradeep_fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
-    
+
     run.log("pradeep_fresh_data_accuracy", accuracy)
-    run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
+    #run.log(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")
     
     
     #print(f"::set-output name=pradeep_fresh_data_accuracy::{accuracy}")

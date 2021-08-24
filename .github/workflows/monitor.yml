@@ -59,9 +59,9 @@ jobs:
     
     - name: Debugging
       run: |
-        echo ${{steps.aml_monitor_run.outputs.get_metrics.pradeep_fresh_data_accuracy}}
-        echo ${{steps.aml_monitor_run.outputs.run_metrics.Fresh_data_accuracy}}
-        echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+          echo ${{steps.aml_monitor_run.outputs.get_metrics.pradeep_fresh_data_accuracy}}
+    #      echo ${{steps.aml_monitor_run.outputs.run_metrics.Fresh_data_accuracy}}
+    #      echo ${{steps.aml_monitor_run.outputs.run_metrics}}
 
     # # Submit a training run to the Azure Machine Learning
     # - name: Submit model re-training run
