@@ -59,7 +59,6 @@ jobs:
     
     - name: Debugging
       id: aml_debugging_run
-      uses: Azure/aml-run@v1
       run: |
           echo ${{steps.aml_monitor_run.outputs.run_metrics.run_id.pradeep_fresh_data_accuracy}}
           echo "_____"
