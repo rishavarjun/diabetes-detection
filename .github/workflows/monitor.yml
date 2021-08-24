@@ -11,9 +11,6 @@ on:
 jobs:
   job1:    # job name
     runs-on: ubuntu-latest
-    variables:
-    - name: pradeep_fresh_data_accuracy
-      value: 67
     steps:
     # Checking out repository
     - name: Check Out Repository
