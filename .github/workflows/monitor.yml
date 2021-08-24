@@ -11,6 +11,9 @@ on:
 jobs:
   job1:    # job name
     runs-on: ubuntu-latest
+    variables:
+    - name: pradeep_fresh_data_accuracy
+      value: 67
     steps:
     # Checking out repository
     - name: Check Out Repository
@@ -59,15 +62,39 @@ jobs:
     
     - name: Debugging
       run: |
-          echo $(pradeep_fresh_data_accuracy)
-          echo ""---------""
-          echo $(steps.aml_monitor_run.outputs.run_id.pradeep_fresh_data_accuracy)
-          echo ""---------""
-          echo $(steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy)
+          echo $accuracy
+          echo "---------"
+          echo $(accuracy)
+          echo "---------"
+          echo $(aml_monitor_run.accuracy)
+          echo "---------"
+          echo $[aml_monitor_run.accuracy]
+          echo "---------"
+          echo $[accuracy]
+          echo "---------"
+          echo $(aml_monitor_run.pradeep_fresh_data_accuracy)
+          echo "---------"
+          echo ${{aml_monitor_run.pradeep_fresh_data_accuracy}}
+          echo "---------"
+          echo $(Debugging.pradeep_fresh_data_accuracy)
+          echo "---------"
+          echo $[aml_monitor_run.pradeep_fresh_data_accuracy]
+          echo "---------"
+          echo $(aml_monitor_run.pradeep_fresh_data_accuracy)
+          echo "---------"
+          echo $[pradeep_fresh_data_accuracy]
+          echo "---------"
+          echo $[steps.aml_monitor_run.outputs.run_id.pradeep_fresh_data_accuracy]
+          echo "---------"
+          echo $[steps.aml_monitor_run.outputs.pradeep_fresh_data_accuracy]
+          echo "---------"
+          echo $[steps.aml_monitor_run.outputs['aml_monitor_run.pradeep_fresh_data_accuracy'] ]
+          echo "---------"
+          echo $[steps.aml_monitor_run.outputs['pradeep_fresh_data_accuracy'] ]
           echo "______________________"
-          
+
           echo ${{steps.aml_monitor_run.outputs.run_metrics}}
-          echo ""---------""
+          echo "---------"
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
 
     #      echo ${{steps.aml_monitor_run.outputs.run_metrics_markdown}}
