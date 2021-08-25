@@ -59,34 +59,53 @@ jobs:
     
     - name: Debugging
       run: |
-          
-          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics).pradeep_fresh_data_accuracy}}"
-          echo "---------"
-          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)}}"
-          echo "---------"
-          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)[0]}}"
-          
-         
-        
-          echo "-----"
-          echo "${{steps.aml_monitor_run.outputs.run_metrics}}" | sed '*/ //g' | sed 's/.*://'
+            echo "------ Truth ------"
+            echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+            
+            echo "------ just printing 1 ------"
+            echo $steps.aml_monitor_run.outputs.run_metrics
+            
+            echo "------ just printing 2 ------"
+            echo ${steps.aml_monitor_run.outputs.run_metrics}
+
+            echo "------ just printing 3 ------"
+            echo $(steps.aml_monitor_run.outputs.run_metrics)
+
+            echo "------ just printing 4 ------"
+            echo $[steps.aml_monitor_run.outputs.run_metrics]
+
+            echo "------ Extracting ------"
+            echo $steps.aml_monitor_run.outputs.run_metrics | sed 's/.*://' | grep -oP '\d+'
+
+      
+
+    # echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics).pradeep_fresh_data_accuracy}}"
+    # echo "---------"
+    # echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)}}"
+    # echo "---------"
+    # echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)[0]}}"
+    
+    
+  
+    # echo "-----"
+    # echo "${{steps.aml_monitor_run.outputs.run_metrics}}" | sed '*/ //g' | sed 's/.*://'
 
 
-          echo "-----"
-          token = $(steps.aml_monitor_run.outputs.run_metrics | jq '.pradeep_fresh_data_accuracy' )
-          echo "$token"
-          
+    # echo "-----"
+    # token = $(steps.aml_monitor_run.outputs.run_metrics | jq '.pradeep_fresh_data_accuracy' )
+    # echo "$token"
+    
 
-          echo  "___________"
-          run_id = "${{steps.aml_monitor_run.outputs.run_id}}"
-          echo "RUN_ID=$run_id" >> "$GITHUB_ENV"
-          echo "$RUN_ID"
-          echo "-----"
+    # echo  "___________"
+    # run_id = "${{steps.aml_monitor_run.outputs.run_id}}"
+    # echo "RUN_ID=$run_id" >> "$GITHUB_ENV"
+    # echo "$RUN_ID"
+    # echo "-----"
 
-          echo "_______________________________"
+    # echo "_______________________________"
 
-          echo ${{steps.aml_monitor_run.outputs.run_metrics}}
-          echo "---------"
+    # echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+    # echo "---------"
 
     #      echo "-----"
     #      echo "${{steps.aml_monitor_run.outputs.run_metrics//*}}"
