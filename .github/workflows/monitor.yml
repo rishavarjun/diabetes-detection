@@ -70,13 +70,13 @@ jobs:
 
             echo "------ Extracting ------"
             new_accuracy=$(echo $dict | sed 's/.*://' | grep -oP '\d+')
+            echo $new_accuracy
+            echo "new_accuracy_env=$new_accuracy" >> $GITHUB_ENV
 
     - name: Debugging_Next_Step
       run: |
             echo "------ Checking is variable is accessible in next step ------"
-            echo ${{new_accuracy}}
-            echo $(new_accuracy)
-            echo $[new_accuracy]
+            echo $new_accuracy_env      
             
 
 
