@@ -64,7 +64,9 @@ jobs:
           echo "---------"
           echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)}}"
           echo "---------"
-          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)}}"
+          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)[0]}}"
+          echo "---------"
+          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)[0]["pradeep_fresh_data_accuracy"]}}"
           
           echo  "___________"
           run_id = ${{steps.aml_monitor_run.outputs.run_id}}
