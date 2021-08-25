@@ -59,6 +59,13 @@ jobs:
     
     - name: Debugging
       run: |
+          
+          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics).pradeep_fresh_data_accuracy}}"
+          echo "---------"
+          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)}}"
+          echo "---------"
+          echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)}}"
+          
           echo "_______________________________"
           
           echo ${{steps.aml_monitor_run.outputs.run_metrics}}

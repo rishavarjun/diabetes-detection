@@ -16,7 +16,7 @@ maxRunDurationSeconds:
 # Number of nodes to use for running job.
 nodeCount: 1
 # Environment details.
-#wait_for_completion: true
+wait_for_completion: true
 environment:
   # Environment name
   name: data_gen_environment
