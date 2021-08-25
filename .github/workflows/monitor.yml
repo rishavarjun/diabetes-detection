@@ -74,7 +74,10 @@ jobs:
     - name: Debugging_Next_Step
       run: |
             echo "------ Checking is variable is accessible in next step ------"
-            echo $new_accuracy
+            echo ${{new_accuracy}}
+            echo $(new_accuracy)
+            echo $[new_accuracy]
+            
 
 
     #         echo "------ just printing 1 ------"
