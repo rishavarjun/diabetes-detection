@@ -66,17 +66,21 @@ jobs:
           echo "---------"
           echo "${{fromJson(steps.aml_monitor_run.outputs.run_metrics)[0]}}"
           
-          echo  "___________"
-          run_id = ${{steps.aml_monitor_run.outputs.run_id}}
-          echo "$run_id"
-          echo "-----"
-          
+         
           call ${{steps.aml_monitor_run.outputs.run_metrics}} > at.json
           echo jq '.pradeep_fresh_data_accuracy' at.json
           echo "-----"
           
           token = $( ${{steps.aml_monitor_run.outputs.run_metrics}} | jq '.pradeep_fresh_data_accuracy' )
           echo "$token"
+
+
+          echo  "___________"
+          run_id = "${{steps.aml_monitor_run.outputs.run_id}}"
+          echo "RUN_ID=$run_id" >> "$GITHUB_ENV"
+          echo "$RUN_ID"
+          echo "-----"
+          
 
           echo "_______________________________"
 
