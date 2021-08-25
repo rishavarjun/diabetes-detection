@@ -29,6 +29,6 @@ for keyval in arr_keyval:
 #print("dictionary =",dictionary)
 
 #print("Output =", dictionary[args[2]])
-print(dictionary)
+print(dictionary[args[2]])
 
 #print(dictionary[args[2]])
