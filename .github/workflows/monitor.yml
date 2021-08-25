@@ -64,7 +64,6 @@ jobs:
             echo "------ Truth ------"
             echo ${{steps.aml_monitor_run.outputs.run_metrics}}
             
-           
             echo "------ Extracting ------"
             echo $dict | sed 's/.*://' | grep -oP '\d+'
 

@@ -121,8 +121,9 @@ if __name__ == "__main__":
 
     #print("pradeep_fresh_data_accuracy", accuracy)
     print("::debug::Creating outputs")
-
-    run.log(name = "pradeep_fresh_data_accuracy", value = 12)
+    
+    run.log("testing_value", 15)
+    run.log("pradeep_fresh_data_accuracy", 0.456)
     
     #print(f"::set-output name=run_metrics_markdown::{run_metrics_markdown}")
 
