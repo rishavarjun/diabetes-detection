@@ -62,7 +62,7 @@ jobs:
             echo "------ Truth ------"
             echo ${{steps.aml_monitor_run.outputs.run_metrics}}
             
-            acc_val_zero=$(python python code/utils.py ${{steps.aml_monitor_run.outputs.run_metrics}} "pradeep_fresh_data_accuracy") 
+            acc_val_zero=$(python code/utils.py ${{steps.aml_monitor_run.outputs.run_metrics}} "pradeep_fresh_data_accuracy") 
             echo $acc_val_zero
             
             echo "acc_val_zero=$acc_val_zero" >> $GITHUB_ENV
@@ -72,7 +72,7 @@ jobs:
 
             echo "Previous Value"
             echo $acc_val_zero 
-            
+
             echo "----"
 
             dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
