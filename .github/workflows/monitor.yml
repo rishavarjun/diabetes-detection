@@ -7,9 +7,9 @@ on:
       - monitor-via-aml
     # paths:
     #   - 'code/*'
-
+    
 jobs:
-  job1: 
+  job1:    # job name
     runs-on: ubuntu-latest
     steps:
     # Checking out repository
