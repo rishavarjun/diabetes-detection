@@ -56,26 +56,22 @@ jobs:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
           # optional
           parameters_file: "monitor-run.json"
-    - name: Debugging_Zero
-      run: |
+    # - name: Debugging_Zero
+    #   run: |
 
-            echo "------ Truth ------"
-            echo ${{steps.aml_monitor_run.outputs.run_metrics}}
-            truth_dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
-            key_val=$(python code/utils.py "${{steps.aml_monitor_run.outputs.run_metrics}}" "pradeep_fresh_data_accuracy")
-            echo "------ Value Of Key ------" 
-            echo "$key_val"
+    #         echo "------ Truth ------"
+    #         echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+    #         truth_dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
+    #         key_val=$(python code/utils.py "${{steps.aml_monitor_run.outputs.run_metrics}}" "pradeep_fresh_data_accuracy")
+    #         echo "------ Value Of Key ------" 
+    #         echo "$key_val"
             
-            echo "key_val=$key_val" >> $GITHUB_ENV
+    #         echo "key_val=$key_val" >> $GITHUB_ENV
 
     - name: Debugging
       run: |
 
-            echo "Previous Value"
-            echo $key_val 
-
-            echo "----"
-
+           
             dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
             echo "------ Truth ------"
             echo ${{steps.aml_monitor_run.outputs.run_metrics}}
