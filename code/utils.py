@@ -9,7 +9,7 @@ args = sys.argv
 
 arr = args[1].split(':')
 input_string = ':'.join(arr[1:])
-chars_to_remove = "* '\""
+chars_to_remove = "* '"
 
 for character in chars_to_remove:
     input_string = input_string.replace(character, "")
