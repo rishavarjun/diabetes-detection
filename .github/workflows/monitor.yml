@@ -62,7 +62,7 @@ jobs:
             echo "------ Truth ------"
             echo ${{steps.aml_monitor_run.outputs.run_metrics}}
             
-            key_val=$(python code/utils.py "${{steps.aml_monitor_run.outputs.run_metrics}}" "pradeep_fresh_data_accuracy")
+            key_val=$(python code/utils.py '${{steps.aml_monitor_run.outputs.run_metrics}}' "pradeep_fresh_data_accuracy")
             echo "------ Value Of Key ------" 
             echo $key_val
             
