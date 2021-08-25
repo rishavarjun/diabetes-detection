@@ -71,8 +71,8 @@ jobs:
             echo "------ Extracting ------"
             new_accuracy=$(echo $dict | sed 's/.*://' | grep -oP '\d+')
 
-      - name: Debugging_Next_Step
-       run: |
+    - name: Debugging_Next_Step
+      run: |
             echo "------ Checking is variable is accessible in next step ------"
             echo $new_accuracy
 
