@@ -22,8 +22,14 @@ arr_keyval = cleaned_string.split(",")
 dictionary = {}
 for keyval in arr_keyval:
     temp_Arr = keyval.split(":")
-    result = re.sub('/[^0-9.]/g', '', temp_Arr[1])
-    dictionary[temp_Arr[0]] = float(result) if result.isnumeric else result
+    #result = re.sub('/[^0-9.]/g', '', temp_Arr[1])
+    result = ""
+    try:
+        result = float(temp_Arr[1])
+    except ValueError:
+        result = temp_Arr[1]
+
+    dictionary[temp_Arr[0]] = result
     #dictionary[temp_Arr[0]] = temp_Arr[1]
 
 #print("dictionary =",dictionary)
