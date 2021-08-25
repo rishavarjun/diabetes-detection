@@ -65,10 +65,10 @@ jobs:
             echo ${{steps.aml_monitor_run.outputs.run_metrics}}
             
             echo "------ Extracting ------"
-            echo $dict | sed 's/.*://' | grep -oP '\d+'
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
 
             echo "------ Extracting ------"
-            new_accuracy=$(echo $dict | sed 's/.*://' | grep -oP '\d+')
+            new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
             echo $new_accuracy
             echo "new_accuracy_env=$new_accuracy" >> $GITHUB_ENV
 
@@ -77,8 +77,6 @@ jobs:
             echo "------ Checking is variable is accessible in next step ------"
             echo $new_accuracy_env      
             
-
-
     #         echo "------ just printing 1 ------"
     #         echo $steps.aml_monitor_run.outputs.run_metrics
             
