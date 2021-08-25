@@ -73,7 +73,7 @@ jobs:
 
 
           echo "-----"
-          token = ${{steps.aml_monitor_run.outputs.run_metrics | jq '.pradeep_fresh_data_accuracy' }}
+          token = $(steps.aml_monitor_run.outputs.run_metrics | jq '.pradeep_fresh_data_accuracy' )
           echo "$token"
           
 
