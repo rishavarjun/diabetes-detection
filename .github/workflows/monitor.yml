@@ -60,7 +60,7 @@ jobs:
     - name: Debugging
       run: |
 
-            dict = ${{steps.aml_monitor_run.outputs.run_metrics}}
+            dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
             echo "------ Truth ------"
             echo ${{steps.aml_monitor_run.outputs.run_metrics}}
             
