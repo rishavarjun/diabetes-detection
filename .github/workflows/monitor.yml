@@ -68,6 +68,15 @@ jobs:
             echo "------ Extracting ------"
             echo $dict | sed 's/.*://' | grep -oP '\d+'
 
+            echo "------ Extracting ------"
+            new_accuracy=$(echo $dict | sed 's/.*://' | grep -oP '\d+')
+
+      - name: Debugging_Next_Step
+       run: |
+            echo "------ Checking is variable is accessible in next step ------"
+            echo $new_accuracy
+
+
     #         echo "------ just printing 1 ------"
     #         echo $steps.aml_monitor_run.outputs.run_metrics
             
