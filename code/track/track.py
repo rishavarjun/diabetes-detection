@@ -12,6 +12,7 @@ from azureml.core.webservice import Webservice
 from azureml.core.run import Run
 
 run = Run.get_context()
+#run = Experiment.start_logging()
 ws = run.experiment.workspace
 
 if __name__ == "__main__":
@@ -87,7 +88,8 @@ if __name__ == "__main__":
     # new_df = pd.DataFrame(input_data_list, columns=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'])
 
     dataset_name = "diabetes-freshdata-" + todays_date
-    diabetes_ds = Dataset.get_by_name(ws, dataset_name)
+    #diabetes_ds = Dataset.get_by_name(ws, dataset_name)
+    diabetes_ds = Dataset.get_by_name(ws, 'diabetes-freshdata-24-Aug-2021')
     new_df = diabetes_ds.to_pandas_dataframe()
 
     array = new_df.values
