@@ -56,8 +56,7 @@ if __name__ == "__main__":
     model.fit(x_train, y_train)
     result = model.score(x_test, y_test)
 
-    print(f"::set-output name=accuracy::{result}")
-    run.log("Model_result", result)
+    # print(f"::set-output name=accuracy::{result}")
 
     # labels = ['Negative', 'Positive']
     # labels_numbers = [0, 1]
@@ -67,9 +66,11 @@ if __name__ == "__main__":
     modelfile = 'outputs/model.pkl'
     joblib.dump(model, modelfile)
     
-    run.log('Intercept:', model.intercept_)
-    run.log('Slope:', model.coef_[0])
+    run.log('Intercept', model.intercept_)
+    run.log('Slope', model.coef_[0])
     run.log("Experiment end time", str(datetime.datetime.now()))
+    run.log("model_accuracy", result)
+    
     run.complete()
     
     print("Finished training!!")

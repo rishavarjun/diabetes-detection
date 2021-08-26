@@ -57,39 +57,60 @@ jobs:
           # optional
           parameters_file: "monitor-run.json"
     
-    - name: Debugging
+    - name: Add fresh_data_accuracy to Github Env
       run: |
-        echo ${{steps.aml_monitor_run.outputs.run_metrics.Fresh_data_accuracy}}
-        echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+            dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
+            echo "------ Truth ------"
+            echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+            
+            echo "------ Extracting ------"
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo "------ Extracting ------"
+            new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $new_accuracy
+            echo "fresh_data_accuracy_env=$new_accuracy" >> $GITHUB_ENV
 
-    # # Submit a training run to the Azure Machine Learning
-    # - name: Submit model re-training run
-    #   if: ${{steps.aml_monitor_run.outputs.freshdata_accuracy < 0.8}}
-    #   id: aml_new_model_run
-    #   uses: Azure/aml-run@v1
-    #   with:
-    #       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    # Submit a training run to the Azure Machine Learning
+    - name: Submit model re-training run
+      if: ${{fresh_data_accuracy_env < 0.8}}
+      id: aml_new_model_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # # Register model in Azure Machine Learning model registry
-    # - name: Register model
-    #   if: ${{steps.aml_new_model_run.outputs.accuracy > steps.aml_monitor_run.outputs.freshdata_accuracy}}
-    #   id: aml_registermodel
-    #   uses: Azure/aml-registermodel@v1
-    #   with:
-    #       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-    #       run_id:  ${{ steps.aml_new_model_run.outputs.run_id }}
-    #       experiment_name: ${{ steps.aml_new_model_run.outputs.experiment_name }}
-    #       # optional
-    #       parameters_file: "monitor-register.json"
+    - name: Add model_accuracy to Github Env
+      run: |
+            dict="${{steps.aml_new_model_run.outputs.run_metrics}}"
+            echo "------ Truth ------"
+            echo ${{steps.aml_new_model_run.outputs.run_metrics}}
+            
+            echo "------ Extracting ------"
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo "------ Extracting ------"
+            new_model_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $new_model_accuracy
+            echo "model_accuracy_env=$new_model_accuracy" >> $GITHUB_ENV
 
-    # # Deploy model in Azure Machine Learning to ACI
-    # - name: Deploy model
-    #   if: ${{steps.aml_new_model_run.outputs.accuracy > steps.aml_monitor_run.outputs.freshdata_accuracy}}
-    #   id: aml_deploy
-    #   uses: Azure/aml-deploy@v1
-    #   with:
-    #       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-    #       model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
-    #       model_version: ${{ steps.aml_registermodel.outputs.model_version }}
-    #       # optional
-    #       parameters_file: "monitor-deploy.json"
+    # Register model in Azure Machine Learning model registry
+    - name: Register model
+      if: ${{model_accuracy_env > fresh_data_accuracy_env}}
+      id: aml_registermodel
+      uses: Azure/aml-registermodel@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          run_id:  ${{ steps.aml_new_model_run.outputs.run_id }}
+          experiment_name: ${{ steps.aml_new_model_run.outputs.experiment_name }}
+          # optional
+          parameters_file: "monitor-register.json"
+
+    # Deploy model in Azure Machine Learning to ACI
+    - name: Deploy model
+      if: ${{model_accuracy_env > fresh_data_accuracy_env}}
+      id: aml_deploy
+      uses: Azure/aml-deploy@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
+          model_version: ${{ steps.aml_registermodel.outputs.model_version }}
+          # optional
+          parameters_file: "monitor-deploy.json"
