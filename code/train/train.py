@@ -11,6 +11,8 @@ import os
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.run import Run
 from azureml.core.model import Model
+from azureml.core.experiment import Experiment
+
 run = Run.get_context()
 ws = run.experiment.workspace
 
@@ -80,8 +82,16 @@ if __name__ == "__main__":
     modelfile = 'outputs/model.pkl'
     joblib.dump(model, modelfile)
 
+    # accessing previous experiment
+    experiment = Experiment(workspace=ws, name='diabetes-detection-monitor-via-aml')
+    list_experiments = Experiment.list(ws)
+    list_runs = experiment.get_runs()
+    recent_expt = list_runs[0]    # most recent experiment
+    metrics = recent_expt.get_metrics()
+    prev_accuracy = metrics.get('Fresh_data_accuracy')
+
     # Changing deployed model tag
-    if INPUT_PREV_ACCURACY < result:
+    if prev_accuracy < result:
         production_model = ""
         model_version = 1
 
