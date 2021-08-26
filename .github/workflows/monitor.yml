@@ -69,10 +69,15 @@ jobs:
             new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
             echo $new_accuracy
             echo "fresh_data_accuracy_env=$new_accuracy" >> $GITHUB_ENV
+    
+    - name: Debugging next steps
+      run: |
+            echo "--- check if variable is accesible in next step ------"
+            echo $fresh_data_accuracy_env
 
     # Submit a training run to the Azure Machine Learning
     - name: Submit model re-training run
-      if: ${{fresh_data_accuracy_env < 0.8}}
+      if: $fresh_data_accuracy_env < 0.8
       id: aml_new_model_run
       uses: Azure/aml-run@v1
       with:
