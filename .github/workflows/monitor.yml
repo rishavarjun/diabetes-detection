@@ -98,7 +98,7 @@ jobs:
 
     # Register model in Azure Machine Learning model registry
     - name: Register model
-      if: ${{model_accuracy_env > fresh_data_accuracy_env}}
+      if: $model_accuracy_env > $fresh_data_accuracy_env
       id: aml_registermodel
       uses: Azure/aml-registermodel@v1
       with:
@@ -110,7 +110,7 @@ jobs:
 
     # Deploy model in Azure Machine Learning to ACI
     - name: Deploy model
-      if: ${{model_accuracy_env > fresh_data_accuracy_env}}
+      if: $model_accuracy_env > $fresh_data_accuracy_env
       id: aml_deploy
       uses: Azure/aml-deploy@v1
       with:
