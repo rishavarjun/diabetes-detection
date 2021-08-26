@@ -10,6 +10,7 @@ from sklearn.metrics import confusion_matrix
 import os
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.run import Run
+from azureml.core.model import Model
 run = Run.get_context()
 ws = run.experiment.workspace
 
@@ -34,6 +35,17 @@ if __name__ == "__main__":
     diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
     df = diabetes_ds.to_pandas_dataframe()
 
+    todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
+    todays_date = todays_date.replace("/", "-")
+
+    dataset_name = "diabetes-freshdata-" + todays_date
+    #diabetes_ds = Dataset.get_by_name(ws, dataset_name)
+    diabetes_ds = Dataset.get_by_name(ws, 'diabetes-freshdata-24-Aug-2021')
+    new_df = diabetes_ds.to_pandas_dataframe()
+    array = new_df.values
+    recent_x = array[:, 0:8]
+    recent_y = array[:, 8]
+
     # run = exp.start_logging()
     # instead of printing as a standard out, divert them into azure logs
     run.log("Experiment start time", str(datetime.datetime.now()))
@@ -50,11 +62,13 @@ if __name__ == "__main__":
     test_size = 0.33
     seed = 7
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size, random_state=7)
+    # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size, random_state=7)
 
     model = LogisticRegression(max_iter=100000)
-    model.fit(x_train, y_train)
-    result = model.score(x_test, y_test)
+    # model.fit(x_train, y_train)
+    # result = model.score(x_test, y_test)
+    model.fit(x, y)
+    result = model.score(recent_x, recent_y)
 
     # print(f"::set-output name=accuracy::{result}")
 
@@ -65,10 +79,26 @@ if __name__ == "__main__":
     # outputs directory is automatically created so dump models here
     modelfile = 'outputs/model.pkl'
     joblib.dump(model, modelfile)
+
+    # Changing deployed model tag
+    if INPUT_PREV_ACCURACY < result:
+        production_model = ""
+        model_version = 1
+
+        for model in Model.list(ws):
+            print(model.name, 'version:', model.version)
+            if "production" in model.tags.values():
+                production_model = model.name
+                model_version = model.version
+                break
+        
+        model = Model(ws, production_model, version=model_version)
+        model.remove_tags('type')
     
     run.log('Intercept', model.intercept_)
     run.log('Slope', model.coef_[0])
     run.log("Experiment end time", str(datetime.datetime.now()))
+    # logging model accuracy on fresh dataset
     run.log("model_accuracy", result)
     
     run.complete()

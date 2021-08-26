@@ -82,6 +82,7 @@ jobs:
       uses: Azure/aml-run@v1
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          prev_accuracy: ${{ env.fresh_data_accuracy_env }}
 
     - name: Add model_accuracy to Github Env
       run: |
