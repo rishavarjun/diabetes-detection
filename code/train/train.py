@@ -8,7 +8,7 @@ import joblib
 import datetime
 from sklearn.metrics import confusion_matrix
 import os
-from azureml.core import Workspace, Experiment, Dataset
+from azureml.core import Workspace, Dataset
 from azureml.core.run import Run
 from azureml.core.model import Model
 from azureml.core.experiment import Experiment
@@ -85,10 +85,14 @@ if __name__ == "__main__":
     # accessing previous experiment
     experiment = Experiment(workspace=ws, name='diabetes-detection-monitor-via-aml')
     list_experiments = Experiment.list(ws)
-    list_runs = experiment.get_runs()
-    recent_expt = list_runs[0]    # most recent experiment
-    metrics = recent_expt.get_metrics()
+    list_runs = experiment.get_runs()       # generated only once
+    for run in list_runs:                   # access last experiment
+        metrics = run.get_metrics()
+        break
+    
+    # metrics = recent_expt.get_metrics()
     prev_accuracy = metrics.get('Fresh_data_accuracy')
+    print(prev_accuracy)
 
     # Changing deployed model tag
     if prev_accuracy < result:
