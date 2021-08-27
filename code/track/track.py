@@ -125,17 +125,17 @@ if __name__ == "__main__":
     # print("::debug::Creating outputs")
     # print(f"::set-output name=freshdata_accuracy::{accuracy}")
 
-    # if accuracy < 0.8:
-    #     # updating dataset with ground truth value
-    #     diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
-    #     main_df = diabetes_ds.to_pandas_dataframe()
+    if accuracy < 0.8:
+        # updating dataset with ground truth value
+        diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
+        main_df = diabetes_ds.to_pandas_dataframe()
 
-    #     frames = [main_df, new_df]
-    #     result_df = pd.concat(frames, ignore_index=True)
+        frames = [main_df, new_df]
+        result_df = pd.concat(frames, ignore_index=True)
 
-    #     diabetes_dataset = Dataset.from_pandas_dataframe(result_df, path=None, in_memory=False)
-    #     datastore = ws.get_default_datastore()
-    #     # Saving file locally and then uploading to datastore and creating modified dataset from it
-    #     # May have to use AWS S3 storage here
-    #     ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
-    #     # now trigger training actions
+        diabetes_dataset = Dataset.from_pandas_dataframe(result_df, path=None, in_memory=False)
+        datastore = ws.get_default_datastore()
+        # Saving file locally and then uploading to datastore and creating modified dataset from it
+        # May have to use AWS S3 storage here
+        ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
+        # now trigger training actions
