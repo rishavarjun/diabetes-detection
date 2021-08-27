@@ -86,9 +86,14 @@ if __name__ == "__main__":
     experiment = Experiment(workspace=ws, name='diabetes-detection-monitor-via-aml')
     list_experiments = Experiment.list(ws)
     list_runs = experiment.get_runs()       # generated only once
+    i = 0
+
     for run in list_runs:                   # access last experiment
-        metrics = run.get_metrics()
-        break
+        if i == 1:
+            metrics = run.get_metrics()
+            print(run.id)
+            break
+        i += 1
     
     # metrics = recent_expt.get_metrics()
     prev_accuracy = metrics.get('Fresh_data_accuracy')
