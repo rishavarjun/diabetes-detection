@@ -88,10 +88,10 @@ if __name__ == "__main__":
     list_runs = experiment.get_runs()       # generated only once
     i = 0
 
-    for run in list_runs:                   # access last experiment
+    for expt_run in list_runs:                   # access last experiment
         if i == 1:
-            metrics = run.get_metrics()
-            print(run.id)
+            metrics = expt_run.get_metrics()
+            print(expt_run.id)
             break
         i += 1
     
