@@ -3,7 +3,7 @@ name: aml-train-deploy-workflow
 
 on:
   repository_dispatch:
-    types: train-deploy
+    types: train
   # push:
   #   branches:
   #     - master
