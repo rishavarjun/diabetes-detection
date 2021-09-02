@@ -5,8 +5,13 @@ on:
   push:
     branches:
       - monitor-via-aml
-    # paths:
-    #   - 'code/*'
+  
+  repository_dispatch:
+    types: train
+  
+  schedule:
+    - cron:  '00 14 * * *'
+
 
 jobs:
   job1:    # job name
@@ -16,24 +21,7 @@ jobs:
     - name: Check Out Repository
       id: checkout_repository
       uses: actions/checkout@v2
-
-    # - name: Set up Python 3.x                               
-    #   uses: actions/setup-python@v2                               
-    #   with:                                 
-    #     python-version: '3.x'
     
-    # - name: Install python packages
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r code/track/requirement.txt
-    
-    # Monitoring Model
-    # - name: Monitor current Model by executing python script
-    #   id: monitor_model
-    #   env:
-    #     azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-    #   run: python code/track/track.py
-
     # Connect with Azure workspace
     - name: Connect/Create Azure Machine Learning Workspace
       id: aml_workspace
@@ -68,21 +56,20 @@ jobs:
             echo "------ Extracting ------"
             new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
             echo $new_accuracy
-            echo "fresh_data_accuracy_env=$new_accuracy" >> $GITHUB_ENV
+            echo "fresh_data_accuracy=$new_accuracy" >> $GITHUB_ENV
     
     - name: Debugging next steps
       run: |
             echo "--- check if variable is accesible in next step ------"
-            echo $fresh_data_accuracy_env
+            echo $fresh_data_accuracy
 
     # Submit a training run to the Azure Machine Learning
     - name: Submit model re-training run
-      if: ${{ env.fresh_data_accuracy_env < 0.8 }}
+      if: ${{ env.fresh_data_accuracy < 0.8 }}
       id: aml_new_model_run
       uses: Azure/aml-run@v1
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          # prev_accuracy: ${{ env.fresh_data_accuracy_env }}
 
     - name: Add model_accuracy to Github Env
       run: |
@@ -93,13 +80,13 @@ jobs:
             echo "------ Extracting ------"
             echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
             echo "------ Extracting ------"
-            new_model_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
-            echo $new_model_accuracy
-            echo "model_accuracy_env=$new_model_accuracy" >> $GITHUB_ENV
+            latest_model_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $latest_model_accuracy
+            echo "new_model_accuracy=$latest_model_accuracy" >> $GITHUB_ENV
 
     # Register model in Azure Machine Learning model registry
     - name: Register model
-      if: ${{env.model_accuracy_env > env.fresh_data_accuracy_env}}
+      if: ${{env.new_model_accuracy > env.fresh_data_accuracy}}
       id: aml_registermodel
       uses: Azure/aml-registermodel@v1
       with:
@@ -111,7 +98,7 @@ jobs:
 
     # Deploy model in Azure Machine Learning to ACI
     - name: Deploy model
-      if: ${{env.model_accuracy_env > env.fresh_data_accuracy_env}}
+      if: ${{env.new_model_accuracy > env.fresh_data_accuracy}}
       id: aml_deploy
       uses: Azure/aml-deploy@v1
       with:

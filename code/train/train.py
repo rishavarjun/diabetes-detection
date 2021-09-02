@@ -17,23 +17,6 @@ run = Run.get_context()
 ws = run.experiment.workspace
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument(
-    #     '--data_path',
-    #     type=str,
-    #     help='Path to the training data'
-    # )
-
-    # args = parser.parse_args()
-    # print("LIST FILES IN DATA PATH...")
-    # data_files = os.listdir(args.data_path)
-    # print(data_files)
-
-    # file_path = os.path.join(os.getcwd(), data_files[0])
-    # print(file_path)
-    # ws = Workspace.from_config()
-    # ensure diabetes_ds is already registerd as a dataset
-
     diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
     df = diabetes_ds.to_pandas_dataframe()
 
@@ -41,8 +24,8 @@ if __name__ == "__main__":
     todays_date = todays_date.replace("/", "-")
 
     dataset_name = "diabetes-freshdata-" + todays_date
-    #diabetes_ds = Dataset.get_by_name(ws, dataset_name)
-    diabetes_ds = Dataset.get_by_name(ws, 'diabetes-freshdata-24-Aug-2021')
+    diabetes_ds = Dataset.get_by_name(ws, dataset_name)
+    # diabetes_ds = Dataset.get_by_name(ws, 'diabetes-freshdata-24-Aug-2021')
     new_df = diabetes_ds.to_pandas_dataframe()
     array = new_df.values
     recent_x = array[:, 0:8]
@@ -71,12 +54,6 @@ if __name__ == "__main__":
     # result = model.score(x_test, y_test)
     model.fit(x, y)
     result = model.score(recent_x, recent_y)
-
-    # print(f"::set-output name=accuracy::{result}")
-
-    # labels = ['Negative', 'Positive']
-    # labels_numbers = [0, 1]
-    # cm = confusion_matrix(y_test, result, labels_numbers)
     
     # outputs directory is automatically created so dump models here
     modelfile = 'outputs/model.pkl'
