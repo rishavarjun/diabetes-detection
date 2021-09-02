@@ -36,10 +36,10 @@ jobs:
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
     
-     - name: Setup dotnet 
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '2.1.x'
+    - name: Setup dotnet 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.1.x'
 
     # Submit a monitoring run to AML
     - name: Submit model monitoring run
