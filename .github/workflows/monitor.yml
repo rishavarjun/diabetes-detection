@@ -4,7 +4,7 @@
 on:
   push:
     branches:
-      - monitor-via-aml
+      - master
   
   repository_dispatch:
     types: train
