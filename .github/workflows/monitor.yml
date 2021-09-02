@@ -1,73 +1,109 @@
 # # Actions train a model on Azure Machine Learning
 # name: aml-model-monitor
 
-# on:
-#   push:
-#     branches:
-#       - master
-#     # paths:
-#     #   - 'code/*'
+on:
+  push:
+    branches:
+      - monitor-via-aml
+  
+  repository_dispatch:
+    types: train
+  
+  schedule:
+    - cron:  '00 14 * * *'
 
-# jobs:
-#   job1:    # job name
-#     runs-on: ubuntu-latest
-#     steps:
-#     # Checking out repository
-#     - name: Check Out Repository
-#       id: checkout_repository
-#       uses: actions/checkout@v2
 
-#     - name: Set up Python 3.x                               
-#       uses: actions/setup-python@v2                               
-#       with:                                 
-#         python-version: '3.x'
+jobs:
+  job1:    # job name
+    runs-on: ubuntu-latest
+    steps:
+    # Checking out repository
+    - name: Check Out Repository
+      id: checkout_repository
+      uses: actions/checkout@v2
     
-#     - name: Install python packages
-#       run: |
-#         python -m pip install --upgrade pip
-#         pip install -r code/track/requirement.txt
+    # Connect with Azure workspace
+    - name: Connect/Create Azure Machine Learning Workspace
+      id: aml_workspace
+      uses: Azure/aml-workspace@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
     
-#     # Monitoring Model
-#     - name: Monitor current Model by executing python script
-#       id: monitor_model
-#       env:
-#         azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-#       run: python code/track/track.py
+    # Connecting to Azure Compute instance
+    - name: Connect/Create Azure Machine Learning Compute Target
+      id: aml_compute_training
+      uses: Azure/aml-compute@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
     
-#     # Connecting to Azure Compute instance
-#     - name: Connect/Create Azure Machine Learning Compute Target
-#       if: steps.monitor_model.outputs.test_accuracy < 0.8
-#       id: aml_compute_training
-#       uses: Azure/aml-compute@v1
-#       with:
-#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    # Submit a monitoring run to AML
+    - name: Submit model monitoring run
+      id: aml_monitor_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          # optional
+          parameters_file: "monitor-run.json"
     
-#     # Submit a training run to the Azure Machine Learning
-#     - name: Submit training run
-#       if: steps.monitor_model.outputs.test_accuracy < 0.8
-#       id: aml_run
-#       uses: Azure/aml-run@v1
-#       with:
-#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Add fresh_data_accuracy to Github Env
+      run: |
+            dict="${{steps.aml_monitor_run.outputs.run_metrics}}"
+            echo "------ Truth ------"
+            echo ${{steps.aml_monitor_run.outputs.run_metrics}}
+            
+            echo "------ Extracting ------"
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo "------ Extracting ------"
+            new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $new_accuracy
+            echo "fresh_data_accuracy=$new_accuracy" >> $GITHUB_ENV
+    
+    - name: Debugging next steps
+      run: |
+            echo "--- check if variable is accesible in next step ------"
+            echo $fresh_data_accuracy
 
-#     # Register model in Azure Machine Learning model registry
-#     - name: Register model
-#       if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
-#       id: aml_registermodel
-#       uses: Azure/aml-registermodel@v1
-#       with:
-#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-#           run_id:  ${{ steps.aml_run.outputs.run_id }}
-#           experiment_name: ${{ steps.aml_run.outputs.experiment_name }}
+    # Submit a training run to the Azure Machine Learning
+    - name: Submit model re-training run
+      if: ${{ env.fresh_data_accuracy < 0.8 }}
+      id: aml_new_model_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
-#     # Deploy model in Azure Machine Learning to ACI
-#     - name: Deploy model
-#       if: steps.aml_run.outputs.accuracy > steps.monitor_model.outputs.test_accuracy
-#       id: aml_deploy
-#       uses: Azure/aml-deploy@v1
-#       with:
-#           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-#           model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
-#           model_version: ${{ steps.aml_registermodel.outputs.model_version }}
-#           # optional
-#           parameters_file: "deploy.json"
+    - name: Add model_accuracy to Github Env
+      run: |
+            dict="${{steps.aml_new_model_run.outputs.run_metrics}}"
+            echo "------ Truth ------"
+            echo ${{steps.aml_new_model_run.outputs.run_metrics}}
+            
+            echo "------ Extracting ------"
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo "------ Extracting ------"
+            latest_model_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $latest_model_accuracy
+            echo "new_model_accuracy=$latest_model_accuracy" >> $GITHUB_ENV
+
+    # Register model in Azure Machine Learning model registry
+    - name: Register model
+      if: ${{env.new_model_accuracy > env.fresh_data_accuracy}}
+      id: aml_registermodel
+      uses: Azure/aml-registermodel@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          run_id:  ${{ steps.aml_new_model_run.outputs.run_id }}
+          experiment_name: ${{ steps.aml_new_model_run.outputs.experiment_name }}
+          # optional
+          parameters_file: "monitor-register.json"
+
+    # Deploy model in Azure Machine Learning to ACI
+    - name: Deploy model
+      if: ${{env.new_model_accuracy > env.fresh_data_accuracy}}
+      id: aml_deploy
+      uses: Azure/aml-deploy@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
+          model_version: ${{ steps.aml_registermodel.outputs.model_version }}
+          # optional
+          parameters_file: "monitor-deploy.json"
