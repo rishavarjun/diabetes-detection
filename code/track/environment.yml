@@ -13,4 +13,4 @@ dependencies:
   - pip:
     - azureml-defaults==1.19.0
     - distro
-    - dotnetcore2
+    - dotnetcore2==2.1
