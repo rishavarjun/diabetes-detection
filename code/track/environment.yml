@@ -12,4 +12,5 @@ dependencies:
   - matplotlib=3.3.3
   - pip:
     - azureml-defaults==1.19.0
+    - distro
     - dotnetcore2
