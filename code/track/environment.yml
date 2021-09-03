@@ -10,7 +10,6 @@ dependencies:
   - scikit-learn=0.23.2
   - pandas=1.1.5
   - matplotlib=3.3.3
-  - dotnet-runtime
   - pip:
     - azureml-defaults==1.19.0
-
+    - dotnetcore2
