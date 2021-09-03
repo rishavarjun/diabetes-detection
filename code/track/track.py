@@ -4,7 +4,8 @@ import joblib
 import re
 import pandas as pd
 import datetime
-
+from dotnetcore2 import runtime
+runtime.version = ("18", "10", "0")
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
 from azureml.core.run import Run
