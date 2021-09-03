@@ -2,13 +2,15 @@
 # https://conda.io/docs/user-guide/tasks/manage-environments.html#create-env-file-manually
 
 name: training_env
+channels:
+  - conda-forge
+  - default
 dependencies:
   - python=3.6.2
   - scikit-learn=0.23.2
   - pandas=1.1.5
   - matplotlib=3.3.3
-  - dotnet-runtime=2.1.0
+  - dotnet-runtime
   - pip:
     - azureml-defaults==1.19.0
-channels:
-  - conda-forge
+
