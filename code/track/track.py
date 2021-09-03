@@ -6,8 +6,8 @@ import pandas as pd
 import datetime
 from dotnetcore2 import runtime
 # bin_folder  = runtime._get_bin_folder()
-missing_packages = runtime._gather_dependencies(bin_folder)
-print(missing_packages)
+# missing_packages = runtime._gather_dependencies(bin_folder)
+# print(missing_packages)
 # runtime.version = ("18", "10", "0")
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
