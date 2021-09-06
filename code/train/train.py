@@ -23,10 +23,10 @@ if __name__ == "__main__":
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
 
-    dataset_name = "diabetes-freshdata-" + todays_date
-    diabetes_ds = Dataset.get_by_name(ws, dataset_name)
+    fresh_ds = "diabetes-freshdata-" + todays_date
+    fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
     # diabetes_ds = Dataset.get_by_name(ws, 'diabetes-freshdata-24-Aug-2021')
-    new_df = diabetes_ds.to_pandas_dataframe()
+    new_df = fresh_diabetes_ds.to_pandas_dataframe()
     array = new_df.values
     recent_x = array[:, 0:8]
     recent_y = array[:, 8]
