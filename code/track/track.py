@@ -79,7 +79,7 @@ if __name__ == "__main__":
         ds = ds.register(workspace = workspace,
                         name = 'diabetes_ds',
                         # description = 'new titanic training data',
-                        create_new_version = True))
+                        create_new_version = True)
         # Saving file locally and then uploading to datastore and creating modified dataset from it
         # May have to use AWS S3 storage here
         # ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
