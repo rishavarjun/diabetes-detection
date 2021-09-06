@@ -14,22 +14,6 @@ run = Run.get_context()
 ws = run.experiment.workspace
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument(
-    #     '--data_path',
-    #     type=str,
-    #     help='Path to the training data'
-    # )
-
-    # args = parser.parse_args()
-    # print("LIST FILES IN DATA PATH...")
-    # data_files = os.listdir(args.data_path)
-    # print(data_files)
-
-    # file_path = os.path.join(os.getcwd(), data_files[0])
-    # print(file_path)
-    # ws = Workspace.from_config()
-    # ensure diabetes_ds is already registerd as a dataset
 
     diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
     df = diabetes_ds.to_pandas_dataframe()
@@ -55,11 +39,7 @@ if __name__ == "__main__":
     model = LogisticRegression(max_iter=100000)
     model.fit(x_train, y_train)
     result = model.score(x_test, y_test)
-    run.log("Model result:", result)
-
-    # labels = ['Negative', 'Positive']
-    # labels_numbers = [0, 1]
-    # cm = confusion_matrix(y_test, result, labels_numbers)
+    # run.log("Model result:", result)
     
     # outputs directory is automatically created so dump models here
     modelfile = 'outputs/model.pkl'
@@ -68,6 +48,7 @@ if __name__ == "__main__":
     run.log('Intercept:', model.intercept_)
     run.log('Slope:', model.coef_[0])
     run.log("Experiment end time", str(datetime.datetime.now()))
+    run.log("Model result:", result)
     run.complete()
     
     print("Finished training!!")
