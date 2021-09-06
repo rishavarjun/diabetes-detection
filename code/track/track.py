@@ -35,7 +35,7 @@ if __name__ == "__main__":
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
 
-    dataset_name = "diabetes-ds"
+    dataset_name = "diabetes_ds"
     diabetes_ds = Dataset.get_by_name(ws, dataset_name)
     new_df = diabetes_ds.to_pandas_dataframe()
 
