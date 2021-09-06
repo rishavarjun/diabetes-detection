@@ -79,7 +79,7 @@ if __name__ == "__main__":
         
         ds = Dataset.Tabular.from_delimited_files(datastore.path('data/prepared.csv'))
 
-        ds = ds.register(workspace = workspace,
+        ds = ds.register(workspace = ws,
                         name = 'diabetes_ds',
                         # description = 'new titanic training data',
                         create_new_version = True)
