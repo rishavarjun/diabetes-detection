@@ -66,21 +66,21 @@ if __name__ == "__main__":
         frames = [main_df, new_df]
         result_df = pd.concat(frames, ignore_index=True)
         
-        local_path = 'data/prepared.csv'
-        result_df.to_csv(local_path)
+        # local_path = 'data/prepared.csv'
+        # result_df.to_csv(local_path)
 
         # diabetes_dataset = Dataset.from_pandas_dataframe(result_df, path=None, in_memory=False)
         datastore = ws.get_default_datastore()
         
-        datastore.upload(src_dir='data', target_path='data')
+        # datastore.upload(src_dir='data', target_path='data')
         
-        ds = Dataset.Tabular.from_delimited_files(datastore.path('data/prepared.csv'))
+        # ds = Dataset.Tabular.from_delimited_files(datastore.path('data/prepared.csv'))
 
-        ds = ds.register(workspace = workspace,
-                        name = 'diabetes_ds',
-                        # description = 'new titanic training data',
-                        create_new_version = True)
+        # ds = ds.register(workspace = workspace,
+        #                 name = 'diabetes_ds',
+        #                 # description = 'new titanic training data',
+        #                 create_new_version = True)
         # Saving file locally and then uploading to datastore and creating modified dataset from it
         # May have to use AWS S3 storage here
-        # ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
+        ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
         # now trigger training actions

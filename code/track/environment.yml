@@ -11,6 +11,6 @@ dependencies:
   - pandas=1.1.5
   - matplotlib=3.3.3
   - pip:
-    - azureml-defaults==1.19.0
+    - azureml-defaults==1.33.0
     # - distro
     # - dotnetcore2==2.1
