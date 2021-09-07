@@ -41,11 +41,11 @@ if __name__ == "__main__":
     dataset_name = "diabetes_ds"
     diabetes_ds = Dataset.get_by_name(ws, dataset_name)
     new_df = diabetes_ds.to_pandas_dataframe()
-
+    new_df = new_df.fillna(0)
     array = new_df.values
-    print(array)
+    # print(array)
     x = array[:, 0:8]
-    print(x)
+    # print(x)
     ground_truth = array[:, 8]
     ground_truth = [int(i) for i in ground_truth]
 
