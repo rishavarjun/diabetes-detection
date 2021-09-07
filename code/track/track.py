@@ -43,8 +43,9 @@ if __name__ == "__main__":
     new_df = diabetes_ds.to_pandas_dataframe()
 
     array = new_df.values
-
+    print(array)
     x = array[:, 0:8]
+    print(x)
     ground_truth = array[:, 8]
     ground_truth = [int(i) for i in ground_truth]
 
