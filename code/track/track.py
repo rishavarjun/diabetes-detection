@@ -7,7 +7,7 @@ import datetime
 from dotnetcore2 import runtime
 # runtime._enable_debug_logging()
 # runtime.ensure_dependencies()
-print(runtime._gather_dependencies(runtime._get_bin_folder()))
+# print(runtime._gather_dependencies(runtime._get_bin_folder()))
 # bin_folder  = runtime._get_bin_folder()
 # missing_packages = runtime._gather_dependencies(bin_folder)
 # print(missing_packages)
