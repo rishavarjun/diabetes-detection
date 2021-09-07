@@ -35,9 +35,7 @@ jobs:
       uses: Azure/aml-compute@v1
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-    # install dotnetcore2 and dependencies
-    - name: Installing dotnetcore2 and dependencies
-      run: pip install dotnetcore2
+
     # Submit a monitoring run to AML
     - name: Submit model monitoring run
       id: aml_monitor_run
