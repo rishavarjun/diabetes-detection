@@ -21,7 +21,9 @@ jobs:
     - name: Check Out Repository
       id: checkout_repository
       uses: actions/checkout@v2
-    
+    # Check python
+    - name: Checking Python version
+      run: python --version
     # Connect with Azure workspace
     - name: Connect/Create Azure Machine Learning Workspace
       id: aml_workspace
