@@ -24,13 +24,10 @@ jobs:
     # Check python
     - name: Checking Python version
       run: |
+            cd /usr/local/lib
             pwd
             ls
-            cd ..
-            cd ..
-            ls
-            pwd
-            cd /usr
+
 
 
     # Connect with Azure workspace
