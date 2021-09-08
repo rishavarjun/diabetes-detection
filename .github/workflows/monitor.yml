@@ -23,7 +23,13 @@ jobs:
       uses: actions/checkout@v2
     # Check python
     - name: Checking Python version
-      run: python code/track/githubrunner.py
+      run: |
+            pwd
+            ls
+            cd ..
+            cd ..
+
+
     # Connect with Azure workspace
     # - name: Connect/Create Azure Machine Learning Workspace
     #   id: aml_workspace
