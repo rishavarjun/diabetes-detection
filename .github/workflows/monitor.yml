@@ -28,6 +28,9 @@ jobs:
             ls
             cd ..
             cd ..
+            ls
+            pwd
+            cd /usr
 
 
     # Connect with Azure workspace
