@@ -62,32 +62,32 @@ if __name__ == "__main__":
     print("Fresh_data_accuracy", accuracy)
     run.log("Fresh_data_accuracy", accuracy)
 
-    if accuracy < 0.8:
+    # if accuracy < 0.8:
         # updating dataset with ground truth value
-        diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
-        main_df = diabetes_ds.to_pandas_dataframe()
+    diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
+    main_df = diabetes_ds.to_pandas_dataframe()
 
-        frames = [main_df, new_df]
-        result_df = pd.concat(frames, ignore_index=True)
+    frames = [main_df, new_df]
+    result_df = pd.concat(frames, ignore_index=True)
+    
+    if not os.path.exists('data'):
+        os.makedirs('data')
         
-        if not os.path.exists('data'):
-            os.makedirs('data')
-            
-        local_path = 'data/result_df.csv'
-        result_df.to_csv(local_path)
+    local_path = 'data/result_df.csv'
+    result_df.to_csv(local_path)
 
-        # diabetes_dataset = Dataset.from_pandas_dataframe(result_df, path=None, in_memory=False)
-        datastore = ws.get_default_datastore()
-        
-        datastore.upload(src_dir='data', target_path='data')
-        
-        ds = Dataset.Tabular.from_delimited_files(datastore.path('data/result_df.csv'))
+    # diabetes_dataset = Dataset.from_pandas_dataframe(result_df, path=None, in_memory=False)
+    datastore = ws.get_default_datastore()
+    
+    datastore.upload(src_dir='data', target_path='data')
+    
+    ds = Dataset.Tabular.from_delimited_files(datastore.path('data/result_df.csv'))
 
-        ds = ds.register(workspace = ws,
-                        name = 'diabetes_ds',
-                        # description = 'new titanic training data',
-                        create_new_version = True)
-        # Saving file locally and then uploading to datastore and creating modified dataset from it
-        # May have to use AWS S3 storage here
-        # ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
-        # now trigger training actions
+    ds = ds.register(workspace = ws,
+                    name = 'diabetes_ds',
+                    # description = 'new titanic training data',
+                    create_new_version = True)
+    # Saving file locally and then uploading to datastore and creating modified dataset from it
+    # May have to use AWS S3 storage here
+    # ds = Dataset.Tabular.register_pandas_dataframe(result_df, datastore, 'diabetes_ds', description = 'diabetes data set')
+    # now trigger training actions
