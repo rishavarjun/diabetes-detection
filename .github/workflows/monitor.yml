@@ -24,6 +24,7 @@ jobs:
     # Check python
     - name: Checking Python version
       run: |
+            hostnamectl
             cd /usr/local/lib
             pwd
             ls
