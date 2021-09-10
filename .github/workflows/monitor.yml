@@ -1,13 +1,13 @@
-# # Actions train a model on Azure Machine Learning
-# name: aml-model-monitor
+# Actions train a model on Azure Machine Learning
+name: aml-model-monitor
 
 on:
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
   
-  # repository_dispatch:
-  #   types: train
+  repository_dispatch:
+    types: train
   
   # schedule:
   #   - cron:  '00 14 * * *'
