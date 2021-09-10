@@ -59,13 +59,14 @@ if __name__ == "__main__":
     modelfile = 'outputs/model.pkl'
     joblib.dump(model, modelfile)
 
-    # accessing previous experiment
-    experiment = Experiment(workspace=ws, name='diabetes-detection-monitor-via-aml')
+    ########### accessing previous experiment. specify the experiment name ##########
+    experiment = Experiment(workspace=ws, name='diabetes-detection-master')
     list_experiments = Experiment.list(ws)
     list_runs = experiment.get_runs()       # generated only once
     i = 0
 
     for expt_run in list_runs:                   # access last experiment
+        # print(expt_run._run_id)
         if i == 1:
             metrics = expt_run.get_metrics()
             print(expt_run.id)
