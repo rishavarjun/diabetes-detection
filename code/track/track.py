@@ -4,7 +4,14 @@ import joblib
 import re
 import pandas as pd
 import datetime
-
+from dotnetcore2 import runtime
+# runtime._enable_debug_logging()
+# runtime.ensure_dependencies()
+# print(runtime._gather_dependencies(runtime._get_bin_folder()))
+# bin_folder  = runtime._get_bin_folder()
+# missing_packages = runtime._gather_dependencies(bin_folder)
+# print(missing_packages)
+# runtime.version = ("18", "10", "0")
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
 from azureml.core.run import Run
@@ -31,13 +38,14 @@ if __name__ == "__main__":
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
 
-    dataset_name = "diabetes-freshdata-" + todays_date
+    dataset_name = "diabetes_ds"
     diabetes_ds = Dataset.get_by_name(ws, dataset_name)
     new_df = diabetes_ds.to_pandas_dataframe()
-
+    new_df = new_df.fillna(0)
     array = new_df.values
-
+    # print(array)
     x = array[:, 0:8]
+    # print(x)
     ground_truth = array[:, 8]
     ground_truth = [int(i) for i in ground_truth]
 

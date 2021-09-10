@@ -6,22 +6,22 @@ on:
     branches:
       - master
   
-  repository_dispatch:
-    types: train
+  # repository_dispatch:
+  #   types: train
   
-  schedule:
-    - cron:  '00 14 * * *'
+  # schedule:
+  #   - cron:  '00 14 * * *'
 
 
 jobs:
   job1:    # job name
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
     # Checking out repository
     - name: Check Out Repository
       id: checkout_repository
       uses: actions/checkout@v2
-    
+
     # Connect with Azure workspace
     - name: Connect/Create Azure Machine Learning Workspace
       id: aml_workspace
@@ -35,7 +35,7 @@ jobs:
       uses: Azure/aml-compute@v1
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-    
+
     # Submit a monitoring run to AML
     - name: Submit model monitoring run
       id: aml_monitor_run

@@ -6,7 +6,7 @@ script: track.py
 #   "--penalty", 1.0
 # ]
 # The name of the compute target to use for this run.
-target: githubcluster
+target: githubcluster2
 # Framework to execute inside. Allowed values are "Python", "PySpark", "CNTK", "TensorFlow", and "PyTorch".
 framework: Python
 # Communicator for the given framework. Allowed values are "None", "ParameterServer", "OpenMpi", and "IntelMpi".
@@ -42,7 +42,7 @@ environment:
     # Set True to perform this run inside a Docker container.
     enabled: true
     # Base image used for Docker-based runs. Mutually exclusive with base_dockerfile.
-    baseImage: mcr.microsoft.com/azureml/base:intelmpi2018.3-ubuntu16.04
+    baseImage: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu16.04
     # Base Dockerfile used for Docker-based runs. Mutually exclusive with base_image
     baseDockerfile:
     # Set False if necessary to work around shared volume bugs.
