@@ -36,13 +36,12 @@ jobs:
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # Submit a monitoring run to AML
+    # Submit a monitoring run to Azure Machine Learning
     - name: Submit model monitoring run
       id: aml_monitor_run
       uses: Azure/aml-run@v1
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-          # optional
           parameters_file: "monitor-run.json"
     
     - name: Add fresh_data_accuracy to Github Env
@@ -71,7 +70,7 @@ jobs:
       with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Add model_accuracy to Github Env
+    - name: Add new_model_accuracy to Github Env
       run: |
             dict="${{steps.aml_new_model_run.outputs.run_metrics}}"
             echo "------ Truth ------"
@@ -93,7 +92,6 @@ jobs:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
           run_id:  ${{ steps.aml_new_model_run.outputs.run_id }}
           experiment_name: ${{ steps.aml_new_model_run.outputs.experiment_name }}
-          # optional
           parameters_file: "monitor-register.json"
 
     # Deploy model in Azure Machine Learning to ACI
@@ -105,5 +103,4 @@ jobs:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
           model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
           model_version: ${{ steps.aml_registermodel.outputs.model_version }}
-          # optional
           parameters_file: "monitor-deploy.json"
