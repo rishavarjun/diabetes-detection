@@ -2,12 +2,16 @@ import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 import joblib
 import datetime
 from azureml.core import Workspace, Dataset
 from azureml.core.run import Run
 from azureml.core.model import Model
 from azureml.core.experiment import Experiment
+
+max_depth=2
+n_estimators = 20
 
 run = Run.get_context()
 ws = run.experiment.workspace
@@ -36,7 +40,8 @@ if __name__ == "__main__":
     # scaler = MinMaxScaler(feature_range =(0,1))
     # rescaledx = scaler.fit_transform(x)
 
-    model = LogisticRegression(max_iter=100000)
+    # model = LogisticRegression(max_iter=100000)
+    model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
     model.fit(x, y)
     result = model.score(recent_x, recent_y)
     
@@ -76,8 +81,10 @@ if __name__ == "__main__":
         model = Model(ws, production_model, version=model_version)
         model.remove_tags('type')
     
-    run.log('Intercept', model.intercept_)
-    run.log('Slope', model.coef_[0])
+    # run.log('Intercept', model.intercept_)
+    # run.log('Slope', model.coef_[0])
+    run.log('max_depth',max_depth)
+    run.log('n_estimators',n_estimators)
     run.log("Experiment end time", str(datetime.datetime.now()))
     # logging newly trained model accuracy on the fresh dataset
     run.log("model_accuracy", result)
