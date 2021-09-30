@@ -34,27 +34,26 @@ if __name__ == "__main__":
 
     fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
     new_df = fresh_diabetes_ds.to_pandas_dataframe()
-    print(new_df.head())
+    print(new_df.drop(columns='Outcome'))
     array = new_df.values
-    x = array[:, 0:8]
+    x = new_df.drop(columns='Outcome')
     # scaler = MinMaxScaler(feature_range =(0,1))
     # rescaledx = scaler.fit_transform(x)
 
-    ground_truth = array[:, 8]
-    ground_truth = [int(i) for i in ground_truth]
-
+    # ground_truth = array[:, 8]
+    # ground_truth = [int(i) for i in ground_truth]
+    ground_truth = new_df['Outcome']
     predicted_label = current_model.predict(x)
-    predicted_label = [int(i) for i in predicted_label]
+    # predicted_label = [int(i) for i in predicted_label]
         
-    correct = 0
-    for i, label in enumerate(ground_truth):
-        if ground_truth[i] == predicted_label[i]:
-            correct += 1
+    # correct = 0
+    # for i, label in enumerate(ground_truth):
+    #     if ground_truth[i] == predicted_label[i]:
+    #         correct += 1
 
-    current_model_accuracy = correct/len(ground_truth)
-
+    current_model_accuracy = current_model.score(x,ground_truth)
     experiment_model.fit(x,ground_truth)
-    experiment_accuracy = model.score(x,ground_truth)
+    experiment_accuracy = experiment_model.score(x,ground_truth)
     print("current_model_accuracy", current_model_accuracy)
     run.log("current_model_accuracy", current_model_accuracy)
     run.log('New Experiment accuracy',experiment_accuracy)
