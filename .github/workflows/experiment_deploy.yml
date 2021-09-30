@@ -53,9 +53,9 @@ jobs:
             echo "------ Extracting ------"
             echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
             echo "${dict//*}" 
-            echo "$dict" | sed 's/\*//g'
+            echo $dict | sed 's/\*//g'
             echo "${dict//*}"| grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
-            echo "$dict" | sed 's/\*//g'| grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo $dict | sed 's/\*//g'| grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
             echo "------ Extracting ------"
             new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
             echo $new_accuracy
