@@ -1,0 +1,106 @@
+# Actions train a model on Azure Machine Learning
+name: aml-model-monitor
+
+on:
+  push:
+    branches:
+      - master
+  
+  repository_dispatch:
+    types: experiment
+  
+  # schedule:
+  #   - cron:  '00 14 * * *'
+
+
+jobs:
+  job1:    # job name
+    runs-on: ubuntu-18.04
+    steps:
+    # Checking out repository
+    - name: Check Out Repository
+      id: checkout_repository
+      uses: actions/checkout@v2
+
+    # Connect with Azure workspace
+    - name: Connect/Create Azure Machine Learning Workspace
+      id: aml_workspace
+      uses: Azure/aml-workspace@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # Connecting to Azure Compute instance
+    - name: Connect/Create Azure Machine Learning Compute Target
+      id: aml_compute_training
+      uses: Azure/aml-compute@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Submit an experiment run to Azure Machine Learning
+    - name: Submit experiment run
+      id: aml_experiment_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          parameters_file: "experiment-run.json"
+    
+    - name: Add experiment_accuracy to Github Env
+      run: |
+            dict="${{steps.aml_experiment_run.outputs.run_metrics}}"
+            echo "------ Truth ------"
+            echo ${{steps.aml_experiment_run.outputs.run_metrics}}
+            
+            echo "------ Extracting ------"
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo "------ Extracting ------"
+            new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $new_accuracy
+            echo "experiment_accuracy=$new_accuracy" >> $GITHUB_ENV
+    
+    - name: Debugging next steps
+      run: |
+            echo "--- check if variable is accesible in next step ------"
+            echo $experiment_accuracy
+
+    # Submit a training run to the Azure Machine Learning
+    - name: Submit model re-training run
+      if: ${{ env.experiment_accuracy < 0.8 }}
+      id: aml_new_model_run
+      uses: Azure/aml-run@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Add new_model_accuracy to Github Env
+      run: |
+            dict="${{steps.aml_new_model_run.outputs.run_metrics}}"
+            echo "------ Truth ------"
+            echo ${{steps.aml_new_model_run.outputs.run_metrics}}
+            
+            echo "------ Extracting ------"
+            echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
+            echo "------ Extracting ------"
+            latest_model_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
+            echo $latest_model_accuracy
+            echo "new_model_accuracy=$latest_model_accuracy" >> $GITHUB_ENV
+
+    # Register model in Azure Machine Learning model registry
+    - name: Register model
+      if: ${{env.new_model_accuracy > env.fresh_data_accuracy}}
+      id: aml_registermodel
+      uses: Azure/aml-registermodel@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          run_id:  ${{ steps.aml_new_model_run.outputs.run_id }}
+          experiment_name: ${{ steps.aml_new_model_run.outputs.experiment_name }}
+          parameters_file: "monitor-register.json"
+
+    # Deploy model in Azure Machine Learning to ACI
+    - name: Deploy model
+      if: ${{env.new_model_accuracy > env.fresh_data_accuracy}}
+      id: aml_deploy
+      uses: Azure/aml-deploy@v1
+      with:
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          model_name:  ${{ steps.aml_registermodel.outputs.model_name }}
+          model_version: ${{ steps.aml_registermodel.outputs.model_version }}
+          parameters_file: "monitor-deploy.json"
