@@ -1,10 +1,15 @@
 import joblib
 import datetime
 # from sklearn.preprocessing import MinMaxScaler
+from sklearn.ensemble import RandomForestClassifier
 
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
 from azureml.core.run import Run
+
+
+max_depth=2
+n_estimators = 20
 
 run = Run.get_context()
 ws = run.experiment.workspace
@@ -22,6 +27,7 @@ if __name__ == "__main__":
     
     model_path = Model.get_model_path(production_model, _workspace=ws)
     current_model = joblib.load(model_path)
+    model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
 
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
@@ -48,5 +54,8 @@ if __name__ == "__main__":
 
     accuracy = correct/len(ground_truth)
 
+    model.fit(x,ground_truth)
+    experiment_accuracy = model.score(x,ground_truth)
     print("Fresh_data_accuracy", accuracy)
     run.log("Fresh_data_accuracy", accuracy)
+    run.log('New Experiment accuracy',experiment_accuracy)
