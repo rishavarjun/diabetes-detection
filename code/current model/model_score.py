@@ -1,32 +1,29 @@
 import joblib
 import datetime
-from sklearn.ensemble import RandomForestClassifier
+# from sklearn.ensemble import RandomForestClassifier
 
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
 from azureml.core.run import Run
 
-## --- Experiment Parameters ----##
-max_depth=5
-n_estimators = 5
-## ------------------------------##
+
 run = Run.get_context()
 ws = run.experiment.workspace
 
 if __name__ == "__main__":
 
     # Loading registered model
-    # production_model = ""
+    production_model = ""
 
-    # for model in Model.list(ws):
-    #     print(model.name, 'version:', model.version)
-    #     if "production" in model.tags.values():
-    #         production_model = model.name
-    #         break
+    for model in Model.list(ws):
+        print(model.name, 'version:', model.version)
+        if "production" in model.tags.values():
+            production_model = model.name
+            break
     
-    # model_path = Model.get_model_path(production_model, _workspace=ws)
-    # current_model = joblib.load(model_path)
-    experiment_model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
+    model_path = Model.get_model_path(production_model, _workspace=ws)
+    current_model = joblib.load(model_path)
+    # experiment_model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
 
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
@@ -43,7 +40,7 @@ if __name__ == "__main__":
     # ground_truth = array[:, 8]
     # ground_truth = [int(i) for i in ground_truth]
     ground_truth = new_df['Outcome']
-    # predicted_label = current_model.predict(x)
+    predicted_label = current_model.predict(x)
     # predicted_label = [int(i) for i in predicted_label]
         
     # correct = 0
@@ -51,9 +48,9 @@ if __name__ == "__main__":
     #     if ground_truth[i] == predicted_label[i]:
     #         correct += 1
 
-    # current_model_accuracy = current_model.score(x,ground_truth)
-    experiment_model.fit(x,ground_truth)
-    experiment_accuracy = experiment_model.score(x,ground_truth)
-    # print("current_model_accuracy", current_model_accuracy)
-    # run.log("current_model_accuracy", current_model_accuracy)
-    run.log('New Experiment accuracy',experiment_accuracy)
+    current_model_accuracy = current_model.score(x,ground_truth)
+    # experiment_model.fit(x,ground_truth)
+    # experiment_accuracy = experiment_model.score(x,ground_truth)
+    print("current_model_accuracy", current_model_accuracy)
+    run.log("current_model_accuracy", current_model_accuracy)
+    # run.log('New Experiment accuracy',experiment_accuracy)
