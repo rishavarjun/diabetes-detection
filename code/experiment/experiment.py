@@ -7,7 +7,7 @@ from azureml.core.model import Model
 from azureml.core.run import Run
 
 ## --- Experiment Parameters ----##
-max_depth=5
+max_depth = 5
 n_estimators = 5
 ## ------------------------------##
 run = Run.get_context()
@@ -54,6 +54,9 @@ if __name__ == "__main__":
     # current_model_accuracy = current_model.score(x,ground_truth)
     experiment_model.fit(x,ground_truth)
     experiment_accuracy = experiment_model.score(x,ground_truth)
+    modelfile = 'outputs/model.pkl'
+    joblib.dump(experiment_model, modelfile)
     # print("current_model_accuracy", current_model_accuracy)
     # run.log("current_model_accuracy", current_model_accuracy)
     run.log('New Experiment accuracy',experiment_accuracy)
+    # run.log_file()
