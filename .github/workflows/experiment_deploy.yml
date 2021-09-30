@@ -52,7 +52,8 @@ jobs:
             
             echo "------ Extracting ------"
             echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?'
-            echo $dict | sed 's/[*]\+/-\s/g'| grep -Eo '[+-]?[0-9]+([.][0-9]+)?' 
+            echo $dict | sed 's/[*]://'
+            echo $dict | sed 's/[*]://'| grep -Eo '[+-]?[0-9]+([.][0-9]+)?' 
             echo "------ Extracting ------"
             new_accuracy=$(echo $dict | sed 's/.*://' | grep -Eo '[+-]?[0-9]+([.][0-9]+)?')
             echo $new_accuracy
