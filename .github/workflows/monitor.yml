@@ -6,8 +6,8 @@ on:
   #   branches:
   #     - master
   
-  repository_dispatch:
-    types: train
+  # repository_dispatch:
+  #   types: train
   
   # schedule:
   #   - cron:  '00 14 * * *'

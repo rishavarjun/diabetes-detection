@@ -1,5 +1,8 @@
 import joblib
 import datetime
+
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
 from azureml.core import Workspace, Experiment, Dataset
@@ -15,48 +18,40 @@ ws = run.experiment.workspace
 
 if __name__ == "__main__":
 
-    # Loading registered model
-    # production_model = ""
-
-    # for model in Model.list(ws):
-    #     print(model.name, 'version:', model.version)
-    #     if "production" in model.tags.values():
-    #         production_model = model.name
-    #         break
-    
-    # model_path = Model.get_model_path(production_model, _workspace=ws)
-    # current_model = joblib.load(model_path)
-    experiment_model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
-
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
     fresh_ds = "diabetes_ds"
 
     fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
-    new_df = fresh_diabetes_ds.to_pandas_dataframe()
-    print(new_df.drop(columns='Outcome'))
-    array = new_df.values
-    x = new_df.drop(columns='Outcome')
-    # scaler = MinMaxScaler(feature_range =(0,1))
-    # rescaledx = scaler.fit_transform(x)
+    df = fresh_diabetes_ds.to_pandas_dataframe()
 
-    # ground_truth = array[:, 8]
-    # ground_truth = [int(i) for i in ground_truth]
-    ground_truth = new_df['Outcome']
-    # predicted_label = current_model.predict(x)
-    # predicted_label = [int(i) for i in predicted_label]
-        
-    # correct = 0
-    # for i, label in enumerate(ground_truth):
-    #     if ground_truth[i] == predicted_label[i]:
-    #         correct += 1
+    experiment_start_time = datetime.datetime.now()
+    
+    x = df.drop(columns='Outcome')
+    y = df['Outcome']
 
-    # current_model_accuracy = current_model.score(x,ground_truth)
-    experiment_model.fit(x,ground_truth)
-    experiment_accuracy = experiment_model.score(x,ground_truth)
+    scaler = MinMaxScaler(feature_range =(0,1))
+    rescaledx = scaler.fit_transform(x)
+
+    test_size = 0.33
+    seed = 7
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size, random_state=seed)
+
+    experiment_model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
+    experiment_model.fit(x_train, y_train)
+    accuracy = experiment_model.score(x_test, y_test)
+   
     modelfile = 'outputs/model.pkl'
-    joblib.dump(experiment_model, modelfile)
-    # print("current_model_accuracy", current_model_accuracy)
-    # run.log("current_model_accuracy", current_model_accuracy)
-    run.log('New Experiment accuracy',experiment_accuracy)
-    # run.log_file()
+    joblib.dump(model, modelfile)
+    
+    experiment_end_time = datetime.datetime.now()
+    experiment_duration = (experiment_end_time - experiment_start_time).total_seconds()
+    
+    run.log('max_depth',max_depth )
+    run.log('n_estimators', n_estimators)
+    run.log("Experiment duration (s)", str(experiment_duration))
+    run.log('Experiment Model accuracy',experiment_accuracy)
+    run.complete()
+    
+    print("Finished training!!")

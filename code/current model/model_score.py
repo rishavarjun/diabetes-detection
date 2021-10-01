@@ -23,34 +23,42 @@ if __name__ == "__main__":
     
     model_path = Model.get_model_path(production_model, _workspace=ws)
     current_model = joblib.load(model_path)
-    # experiment_model = RandomForestClassifier(n_estimators = n_estimators,max_depth = max_depth)
-
+    
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
     fresh_ds = "diabetes_ds"
 
     fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
-    new_df = fresh_diabetes_ds.to_pandas_dataframe()
-    print(new_df.drop(columns='Outcome'))
-    array = new_df.values
-    x = new_df.drop(columns='Outcome')
-    # scaler = MinMaxScaler(feature_range =(0,1))
-    # rescaledx = scaler.fit_transform(x)
+    df = fresh_diabetes_ds.to_pandas_dataframe()
 
-    # ground_truth = array[:, 8]
-    # ground_truth = [int(i) for i in ground_truth]
-    ground_truth = new_df['Outcome']
-    predicted_label = current_model.predict(x)
-    # predicted_label = [int(i) for i in predicted_label]
-        
-    # correct = 0
-    # for i, label in enumerate(ground_truth):
-    #     if ground_truth[i] == predicted_label[i]:
-    #         correct += 1
+    experiment_start_time = datetime.datetime.now()
+    
+    x = df.drop(columns='Outcome')
+    y = df['Outcome']
 
-    current_model_accuracy = current_model.score(x,ground_truth)
-    # experiment_model.fit(x,ground_truth)
-    # experiment_accuracy = experiment_model.score(x,ground_truth)
-    print("current_model_accuracy", current_model_accuracy)
+    scaler = MinMaxScaler(feature_range =(0,1))
+    rescaledx = scaler.fit_transform(x)
+
+    test_size = 0.33
+    seed = 7
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size, random_state=seed)
+
+    current_model.fit(x_train, y_train)
+    current_model_accuracy = current_model.score(x_test, y_test)
+   
+    modelfile = 'outputs/model.pkl'
+    joblib.dump(model, modelfile)
+    
+    experiment_end_time = datetime.datetime.now()
+    experiment_duration = (experiment_end_time - experiment_start_time).total_seconds()
+    
+    run.log('max_depth',max_depth )
+    run.log('n_estimators', n_estimators)
+    run.log("Experiment duration (s)", str(experiment_duration))
     run.log("current_model_accuracy", current_model_accuracy)
-    # run.log('New Experiment accuracy',experiment_accuracy)
+    run.complete()
+    
+    print("current_model_accuracy", current_model_accuracy)
+    print("Finished Scoring!!")
+
