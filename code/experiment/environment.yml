@@ -10,4 +10,4 @@ dependencies:
   - pip:
     - azureml-defaults==1.19.0
 channels:
-  - conda-forge
+  - defaults
