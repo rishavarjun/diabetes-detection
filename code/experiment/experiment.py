@@ -51,7 +51,7 @@ if __name__ == "__main__":
     run.log('max_depth',max_depth )
     run.log('n_estimators', n_estimators)
     run.log("Experiment duration (s)", str(experiment_duration))
-    run.log('Experiment Model accuracy',experiment_accuracy)
+    run.log('Experiment Model accuracy',accuracy)
     run.complete()
     
     print("Finished training!!")
