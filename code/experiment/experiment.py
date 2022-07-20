@@ -43,7 +43,7 @@ if __name__ == "__main__":
     accuracy = experiment_model.score(x_test, y_test)
    
     modelfile = 'outputs/model.pkl'
-    joblib.dump(model, modelfile)
+    joblib.dump(experiment_model, modelfile)
     
     experiment_end_time = datetime.datetime.now()
     experiment_duration = (experiment_end_time - experiment_start_time).total_seconds()
