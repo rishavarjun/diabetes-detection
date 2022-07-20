@@ -26,7 +26,7 @@ if __name__ == "__main__":
     
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
-    fresh_ds = "diabetes_ds"
+    fresh_ds = "diabetes_dataset"
 
     fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
     df = fresh_diabetes_ds.to_pandas_dataframe()
@@ -48,13 +48,12 @@ if __name__ == "__main__":
     current_model_accuracy = current_model.score(x_test, y_test)
    
     modelfile = 'outputs/model.pkl'
-    joblib.dump(model, modelfile)
+    joblib.dump(current_model, modelfile)
     
     experiment_end_time = datetime.datetime.now()
     experiment_duration = (experiment_end_time - experiment_start_time).total_seconds()
     
-    run.log('max_depth',max_depth )
-    run.log('n_estimators', n_estimators)
+    
     run.log("Experiment duration (s)", str(experiment_duration))
     run.log("current_model_accuracy", current_model_accuracy)
     run.complete()
