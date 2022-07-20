@@ -15,7 +15,7 @@ ws = run.experiment.workspace
 
 if __name__ == "__main__":
 
-    diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
+    diabetes_ds = Dataset.get_by_name(ws, 'diabetes-dataset')
     df = diabetes_ds.to_pandas_dataframe()
 
     # run = exp.start_logging()
