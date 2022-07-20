@@ -1,6 +1,7 @@
 import joblib
 import datetime
 # from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import MinMaxScaler
 
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
@@ -44,7 +45,7 @@ if __name__ == "__main__":
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size, random_state=seed)
 
-    current_model.fit(x_train, y_train)
+    # current_model.fit(x_train, y_train)
     current_model_accuracy = current_model.score(x_test, y_test)
    
     modelfile = 'outputs/model.pkl'
