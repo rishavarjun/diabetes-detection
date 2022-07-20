@@ -10,6 +10,5 @@ dependencies:
     - azureml-defaults
     - azureml-monitoring
     - inference-schema
-    - inference-schema[numpy-support]
 channels:
   - defaults
