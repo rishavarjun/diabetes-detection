@@ -2,6 +2,7 @@ import joblib
 import datetime
 # from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 
 from azureml.core import Workspace, Experiment, Dataset
 from azureml.core.model import Model
