@@ -9,6 +9,7 @@ dependencies:
   - pip:
     - azureml-defaults
     - azureml-monitoring
+    - azureml-model-management-sdk
     - inference-schema
 channels:
   - defaults
