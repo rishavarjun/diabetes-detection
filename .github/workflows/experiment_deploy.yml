@@ -2,12 +2,12 @@
 name: aml-model-monitor
 
 on:
-  push:
-    branches:
-      - arjunr-master
+  # push:
+  #   branches:
+  #     - arjunr-master
   
-  # repository_dispatch:
-  #   types: experiment
+  repository_dispatch:
+    types: experiment
   
   # schedule:
   #   - cron:  '00 14 * * *'
