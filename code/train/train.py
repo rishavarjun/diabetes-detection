@@ -18,12 +18,12 @@ ws = run.experiment.workspace
 
 if __name__ == "__main__":
     # Loading trainining dataset
-    diabetes_ds = Dataset.get_by_name(ws, 'diabetes_ds')
+    diabetes_ds = Dataset.get_by_name(ws, 'iabetes-dataset')
     df = diabetes_ds.to_pandas_dataframe()
 
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
     todays_date = todays_date.replace("/", "-")
-    fresh_ds = "diabetes-dataset"
+    fresh_ds = "new-diabetes-dataset"
     fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
 
     new_df = fresh_diabetes_ds.to_pandas_dataframe()
