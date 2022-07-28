@@ -18,7 +18,7 @@ ws = run.experiment.workspace
 
 if __name__ == "__main__":
     # Loading trainining dataset
-    diabetes_ds = Dataset.get_by_name(ws, 'iabetes-dataset')
+    diabetes_ds = Dataset.get_by_name(ws, 'diabetes-dataset')
     df = diabetes_ds.to_pandas_dataframe()
 
     todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
