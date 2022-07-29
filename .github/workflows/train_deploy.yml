@@ -4,7 +4,7 @@ name: aml-train-deploy-workflow
 on:
   push:
     branches:
-      - pann-initializer
+      - newuser-initializer
     # paths:
     #   - 'code/*'
 
