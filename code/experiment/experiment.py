@@ -10,8 +10,8 @@ from azureml.core.model import Model
 from azureml.core.run import Run
 
 ## --- Experiment Parameters ----##
-max_depth = 15
-n_estimators = 15
+max_depth = 20
+n_estimators = 20
 ## ------------------------------##
 run = Run.get_context()
 ws = run.experiment.workspace
