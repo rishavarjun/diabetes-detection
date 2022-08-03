@@ -50,7 +50,7 @@ if __name__ == "__main__":
     joblib.dump(model, modelfile)
 
     # accessing the previous experiment. Specify correct experiment name
-    experiment = Experiment(workspace=ws, name='diabetes-detection-newuser-master')
+    experiment = Experiment(workspace=ws, name='diabetes-detection-newuser-experiment')
     list_experiments = Experiment.list(ws)
     list_runs = experiment.get_runs()       # generated only once
     i = 0

@@ -4,7 +4,7 @@ name: aml-model-monitor
 on:
   # push:
   #   branches:
-  #     - newuser-master
+  #     - newuser-experiment
   
   repository_dispatch:
     types: train

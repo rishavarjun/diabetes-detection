@@ -26,8 +26,8 @@ if __name__ == "__main__":
     model_path = Model.get_model_path(production_model, _workspace=ws)
     current_model = joblib.load(model_path)
     
-    todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
-    todays_date = todays_date.replace("/", "-")
+    # todays_date = datetime.datetime.today().strftime('%d/%b/%Y')
+    # todays_date = todays_date.replace("/", "-")
     fresh_ds = "diabetes-dataset"
 
     fresh_diabetes_ds = Dataset.get_by_name(ws, fresh_ds)
