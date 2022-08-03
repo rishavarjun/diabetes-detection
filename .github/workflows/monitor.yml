@@ -2,9 +2,9 @@
 name: aml-model-monitor
 
 on:
-  push:
-    branches:
-      - newuser-master
+  # push:
+  #   branches:
+  #     - newuser-master
   
   repository_dispatch:
     types: train
