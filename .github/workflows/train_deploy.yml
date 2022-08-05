@@ -2,9 +2,9 @@
 name: aml-train-deploy-workflow
 
 on:
-  push:
-    branches:
-      - newuser-initializer
+  # push:
+  #   branches:
+  #     - newuser-experiment
     # paths:
     #   - 'code/*'
 
