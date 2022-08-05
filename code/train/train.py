@@ -17,8 +17,8 @@ ws = run.experiment.workspace
 
 
 ## --- Experiment Parameters ----##
-max_depth = 2
-n_estimators = 2
+max_depth = 5
+n_estimators = 5
 ## ------------------------------##
 
 if __name__ == "__main__":
